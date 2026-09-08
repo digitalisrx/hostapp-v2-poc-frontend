@@ -14,7 +14,7 @@ let nextModalId = 0;
         <div class="absolute inset-0 flex items-center justify-center p-4" (click)="close.emit()">
           <div
             #panel
-            [class]="'flex max-h-[85vh] w-full flex-col overflow-hidden rounded-lg bg-white shadow-xl ' + maxWidth()"
+            [class]="'flex max-h-[85dvh] w-full flex-col overflow-hidden rounded-lg bg-white shadow-xl ' + maxWidth()"
             role="dialog"
             aria-modal="true"
             [attr.aria-labelledby]="titleId"

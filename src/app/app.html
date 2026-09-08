@@ -44,7 +44,7 @@
 <main class="flex min-h-0 w-full flex-1 overflow-hidden">
   <app-patient-sidebar
     [activeSessionType]="activeSessionType()"
-    (runSession)="runSession($event.type, $event.icpc)"
+    (runSession)="runSession($event.type, $event.icpc, $event.prescription, $event.editingMedicationId)"
   />
   <app-prescriptor-view [iframeUrl]="iframeUrl()" [errorMessage]="errorMessage()" />
 </main>

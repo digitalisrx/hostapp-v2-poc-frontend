@@ -162,10 +162,12 @@ interface LabEntryModel {
                         </span>
                         <span class="w-20 shrink-0 truncate text-left text-gray-500 tabular-nums">
                           {{ result.memo }}
-                          @if (result.unit) {
-                            &middot; {{ result.unit }}
-                          }
                         </span>
+                        @if (result.unit) {
+                          <span class="w-20 shrink-0 truncate text-left text-gray-500 tabular-nums">
+                            {{ result.unit }}
+                          </span>
+                        }
                       </button>
                     </li>
                   }

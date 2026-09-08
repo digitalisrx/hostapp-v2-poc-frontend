@@ -6,7 +6,7 @@ import { AuthStore } from './auth/auth.store';
 import { LoginModal } from './auth/login-modal/login-modal';
 import { DebugModal } from './debug/debug-modal/debug-modal';
 import { PatientSidebar } from './patient-sidebar/patient-sidebar';
-import { PrescriptorService, PrescriptorSessionType } from './prescriptor.service';
+import { PrescriptorPrescription, PrescriptorService, PrescriptorSessionType } from './prescriptor.service';
 import { PrescriptorView } from './prescriptor-view/prescriptor-view';
 import { SettingsModal } from './settings/settings-modal/settings-modal';
 
@@ -42,11 +42,16 @@ export class App {
   protected readonly settingsModalOpen = signal(false);
   protected readonly loginModalOpen = signal(false);
 
-  async runSession(type: PrescriptorSessionType, icpc?: string) {
+  async runSession(
+    type: PrescriptorSessionType,
+    icpc?: string,
+    prescription?: PrescriptorPrescription,
+    editingMedicationId?: string,
+  ) {
     this.errorMessage.set(null);
 
     try {
-      const session = await this.prescriptorService.createSession(type, icpc);
+      const session = await this.prescriptorService.createSession(type, icpc, prescription, editingMedicationId);
       this.iframeUrl.set(session.iframeUrl);
       this.sessionId.set(session.sessionId);
       this.activeSessionType.set(type);

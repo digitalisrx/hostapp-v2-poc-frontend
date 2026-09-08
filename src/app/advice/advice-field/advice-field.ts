@@ -1,10 +1,10 @@
 import { Component, inject } from '@angular/core';
-import { LucideX } from '@lucide/angular';
+import { DeleteButton } from '../../shared/delete-button/delete-button';
 import { AdviceStore } from '../advice.store';
 
 @Component({
   selector: 'app-advice-field',
-  imports: [LucideX],
+  imports: [DeleteButton],
   template: `
     @if (store.loadError(); as error) {
       <div
@@ -32,7 +32,7 @@ import { AdviceStore } from '../advice.store';
       } @else if (advices().length) {
         <div class="divide-y divide-gray-100 text-xs">
           @for (advice of advices(); track advice.id) {
-            <div class="flex items-center gap-2 p-2">
+            <div class="group flex items-center gap-2 py-1.5 pl-3">
               <div class="min-w-0 flex-1 text-gray-700 text-ellipsis overflow-hidden whitespace-nowrap">
                 @if (advice.contentType !== 'text/plain') {
                   <a [href]="advice.text" target="_blank" rel="noopener" class="text-blue-600 hover:underline">
@@ -42,14 +42,7 @@ import { AdviceStore } from '../advice.store';
                   {{ advice.text }}
                 }
               </div>
-              <button
-                type="button"
-                class="shrink-0 rounded p-1 text-gray-400 hover:bg-red-50 hover:text-red-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
-                aria-label="Advies verwijderen"
-                (click)="store.remove(advice.id)"
-              >
-                <svg lucideX [size]="16"></svg>
-              </button>
+              <app-delete-button class="pr-1.5" ariaLabel="Advies verwijderen" (delete)="store.remove(advice.id)" />
             </div>
           }
         </div>

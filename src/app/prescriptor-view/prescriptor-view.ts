@@ -9,17 +9,17 @@ import { SettingsStore } from '../settings/settings.store';
   template: `
     <div class="flex h-full w-full flex-col overflow-hidden bg-gray-50">
       @if (errorMessage(); as error) {
-        <div class="m-4 rounded-md border border-red-300 bg-red-50 p-4 text-sm text-red-800" role="alert">
+        <div class="m-3 rounded-md border border-red-300 bg-red-50 p-3 text-sm text-red-800" role="alert">
           <p class="font-semibold">Prescriptor kan niet worden geladen</p>
           <p class="mt-1">{{ error }}</p>
         </div>
       } @else if (resultStatus() === 'error') {
-        <div class="m-4 rounded-md border border-red-300 bg-red-50 p-4 text-sm text-red-800" role="alert">
+        <div class="m-3 rounded-md border border-red-300 bg-red-50 p-3 text-sm text-red-800" role="alert">
           <p class="font-semibold">Ophalen van het resultaat is mislukt</p>
           <p class="mt-1">{{ resultError() }}</p>
         </div>
       } @else if (resultStatus() === 'resolved') {
-        <div class="flex h-full w-full items-center justify-center p-4 text-center text-sm text-gray-500">
+        <div class="flex h-full w-full items-center justify-center p-3 text-center text-sm text-gray-500">
           Resultaat verwerkt — zie Medicatie en Advies in de zijbalk.
         </div>
       } @else if (iframeUrl(); as url) {

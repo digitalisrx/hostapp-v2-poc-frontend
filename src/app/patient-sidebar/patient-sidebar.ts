@@ -2,6 +2,7 @@ import { Component, computed, inject, input, output, signal } from '@angular/cor
 import {
   LucideCheck,
   LucideChevronUp,
+  LucideList,
   LucidePanelLeftClose,
   LucidePanelLeftOpen,
   LucidePlay,
@@ -14,8 +15,10 @@ import { IcpcContraindicationField } from '../icpc/icpc-contraindication-field/i
 import { IcpcRunModal } from '../icpc/icpc-run-modal/icpc-run-modal';
 import { LabDataField } from '../lab/lab-data-field/lab-data-field';
 import { MedicationField } from '../medication/medication-field/medication-field';
+import { Medication } from '../medication/medication.model';
 import { PatientSelector } from '../patient/patient-selector/patient-selector';
-import { PrescriptorService, PrescriptorSessionType } from '../prescriptor.service';
+import { PrescriptorPrescription, PrescriptorService, PrescriptorSessionType, toPrescriptorPrescription } from '../prescriptor.service';
+import { SectionHeader } from '../shared/section-header/section-header';
 
 const MIN_WIDTH = 240;
 const MAX_WIDTH = 700;
@@ -32,6 +35,7 @@ function clamp(value: number, min: number, max: number): number {
   selector: 'app-patient-sidebar',
   imports: [
     LucideCheck,
+    LucideList,
     LucidePanelLeftClose,
     LucidePanelLeftOpen,
     LucidePlay,
@@ -45,6 +49,7 @@ function clamp(value: number, min: number, max: number): number {
     LabDataField,
     MedicationField,
     PatientSelector,
+    SectionHeader,
   ],
   host: { class: 'flex h-full', '(document:click)': 'closeModeMenu()' },
   template: `
@@ -75,7 +80,7 @@ function clamp(value: number, min: number, max: number): number {
         </button>
       </div>
 
-      <div class="flex flex-1 flex-col gap-3 overflow-y-auto p-3">
+      <div class="flex flex-1 flex-col gap-3 overflow-y-auto p-3 pt-2.5">
         @if (!collapsed()) {
           <div>
             <label>Patiënt</label>
@@ -83,28 +88,54 @@ function clamp(value: number, min: number, max: number): number {
           </div>
 
           <div>
-            <label>ICPC contraindicaties</label>
-            <app-icpc-contraindication-field />
+            <app-section-header
+              label="ICPC contraindicaties"
+              addLabel="ICPC contraindicatie toevoegen"
+              (add)="icpcField.openAdd()"
+            />
+            <app-icpc-contraindication-field #icpcField />
           </div>
 
           <div>
-            <label>G-Standaard contraindicaties</label>
-            <app-gstandaard-contraindication-field />
+            <app-section-header
+              label="G-Standaard contraindicaties"
+              addLabel="G-Standaard contraindicatie toevoegen"
+              (add)="gstandaardField.openAdd()"
+            />
+            <app-gstandaard-contraindication-field #gstandaardField />
           </div>
 
           <div>
-            <label>Allergieën</label>
-            <app-allergy-field />
+            <app-section-header
+              label="Allergieën"
+              addLabel="Allergie toevoegen"
+              (add)="allergyField.openAdd()"
+            />
+            <app-allergy-field #allergyField />
           </div>
 
           <div>
-            <label>Laboratoriumgegevens</label>
-            <app-lab-data-field />
+            <app-section-header
+              label="Laboratoriumgegevens"
+              addLabel="Labwaarde toevoegen"
+              (add)="labDataField.openAdd()"
+            />
+            <app-lab-data-field #labDataField />
           </div>
 
           <div>
-            <label>Medicatie</label>
-            <app-medication-field />
+            <div class="flex items-center justify-between">
+              <label>Medicatie</label>
+              <button
+                type="button"
+                class="flex size-6 items-center justify-center rounded text-gray-500 hover:bg-gray-100 hover:text-gray-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+                aria-label="Medicatie details bekijken"
+                (click)="medicationField.openDetails()"
+              >
+                <svg lucideList [size]="14"></svg>
+              </button>
+            </div>
+            <app-medication-field #medicationField (editPrescription)="onEditPrescription($event)" />
           </div>
 
           <div>
@@ -229,7 +260,12 @@ export class PatientSidebar {
   );
 
   activeSessionType = input<PrescriptorSessionType | null>(null);
-  runSession = output<{ type: PrescriptorSessionType; icpc?: string }>();
+  runSession = output<{
+    type: PrescriptorSessionType;
+    icpc?: string;
+    prescription?: PrescriptorPrescription;
+    editingMedicationId?: string;
+  }>();
 
   protected readonly icpcRunModalOpen = signal(false);
   protected readonly selectedMode = signal<PrescriptorSessionType>('formulary');
@@ -238,6 +274,14 @@ export class PatientSidebar {
   protected onIcpcSelected(icpc: string) {
     this.icpcRunModalOpen.set(false);
     this.runSession.emit({ type: 'formulary', icpc });
+  }
+
+  protected onEditPrescription(medication: Medication) {
+    const prescription = toPrescriptorPrescription(medication);
+    if (!prescription) {
+      return;
+    }
+    this.runSession.emit({ type: 'create-rx', prescription, editingMedicationId: medication.id });
   }
 
   protected runMainAction() {

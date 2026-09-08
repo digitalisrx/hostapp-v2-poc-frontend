@@ -36,7 +36,7 @@ body {
   }
 
   pre {
-    @apply max-h-[min(40rem,75vh)] overflow-auto rounded border border-gray-200 bg-gray-50 p-2 text-xs break-all whitespace-pre-wrap text-gray-700;
+    @apply max-h-[min(40rem,55dvh)] overflow-auto rounded border border-gray-200 bg-gray-50 p-2 text-xs break-all whitespace-pre-wrap text-gray-700;
   }
 
   button {

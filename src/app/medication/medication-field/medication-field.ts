@@ -1,12 +1,12 @@
-import { Component, inject, signal } from '@angular/core';
-import { LucideX } from '@lucide/angular';
+import { Component, inject, output, signal } from '@angular/core';
+import { DeleteButton } from '../../shared/delete-button/delete-button';
 import { MedicationDetailModal } from '../medication-detail-modal/medication-detail-modal';
 import { Medication } from '../medication.model';
 import { MedicationStore } from '../medication.store';
 
 @Component({
   selector: 'app-medication-field',
-  imports: [LucideX, MedicationDetailModal],
+  imports: [DeleteButton, MedicationDetailModal],
   template: `
     @if (store.loadError(); as error) {
       <div
@@ -35,15 +35,15 @@ import { MedicationStore } from '../medication.store';
         <div class="divide-y divide-gray-100 text-xs">
           @for (drug of medications(); track drug.id) {
             <div
-              class="flex cursor-pointer items-start gap-2 p-2 pl-3 hover:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600 focus-visible:-outline-offset-2"
+              class="group flex cursor-pointer items-start gap-2 pl-3 p-1.5 hover:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600 focus-visible:-outline-offset-2"
               role="button"
               tabindex="0"
-              [attr.aria-label]="drug.description + ' details bekijken'"
-              (click)="openDetail(drug.id)"
-              (keydown.enter)="openDetail(drug.id)"
-              (keydown.space)="openDetail(drug.id, $event)"
+              [attr.aria-label]="drug.description + ' bewerken in CreateRx'"
+              (click)="editPrescription.emit(drug)"
+              (keydown.enter)="editPrescription.emit(drug)"
+              (keydown.space)="onSpace(drug, $event)"
             >
-              <div class="min-w-0 flex-1 flex flex-col gap-0.5">
+              <div class="min-w-0 flex-1 flex flex-col gap-1">
                 <div class="flex items-center gap-2">
                   <span class="min-w-0 truncate font-medium text-gray-900">{{ drug.description }}</span>
                   @if (drug.opium) {
@@ -59,14 +59,10 @@ import { MedicationStore } from '../medication.store';
                   {{ drug.duration }} dagen
                 </p>
               </div>
-              <button
-                type="button"
-                class="shrink-0 rounded p-1 text-gray-400 hover:bg-red-50 hover:text-red-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
-                [attr.aria-label]="drug.description + ' verwijderen'"
-                (click)="removeOne(drug.id, $event)"
-              >
-                <svg lucideX [size]="16"></svg>
-              </button>
+              <app-delete-button
+                [ariaLabel]="drug.description + ' verwijderen'"
+                (delete)="store.remove(drug.id)"
+              />
             </div>
           }
         </div>
@@ -78,7 +74,6 @@ import { MedicationStore } from '../medication.store';
     <app-medication-detail-modal
       [open]="detailModalOpen()"
       [medications]="medications()"
-      [focusId]="focusedMedicationId()"
       (close)="detailModalOpen.set(false)"
     />
   `,
@@ -88,17 +83,17 @@ export class MedicationField {
 
   protected readonly medications = this.store.medications;
   protected readonly detailModalOpen = signal(false);
-  protected readonly focusedMedicationId = signal<string | null>(null);
 
-  protected openDetail(id: string, event?: Event) {
-    event?.preventDefault();
-    this.focusedMedicationId.set(id);
+  editPrescription = output<Medication>();
+
+  /** Called from the sidebar's title-bar detail-view button. */
+  openDetails() {
     this.detailModalOpen.set(true);
   }
 
-  protected removeOne(id: string, event: Event) {
-    event.stopPropagation();
-    this.store.remove(id);
+  protected onSpace(drug: Medication, event: Event) {
+    event.preventDefault();
+    this.editPrescription.emit(drug);
   }
 
   protected quantityFor(drug: Medication) {

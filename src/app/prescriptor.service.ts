@@ -31,6 +31,46 @@ interface PrescriptorLaboratoryDatum {
   value: string;
 }
 
+interface PrescriptorPrescriptionCode {
+  value: number;
+  type: 'PRK' | 'HPK';
+  description?: string;
+}
+
+/** An existing medication handed to CreateRx as the starting point for an edit session. */
+export interface PrescriptorPrescription {
+  codes: PrescriptorPrescriptionCode[];
+  atc?: string;
+  quantity?: { value: number; unit: string };
+  directions?: string;
+}
+
+/** Null when the medication has no PRK/HPK code — CreateRx can't be started from it. */
+export function toPrescriptorPrescription(medication: Medication): PrescriptorPrescription | null {
+  const code = medication.codes[0];
+  if (!code || (code.type !== 'PRK' && code.type !== 'HPK')) {
+    return null;
+  }
+
+  return {
+    codes: [
+      {
+        value: typeof code.value === 'number' ? code.value : Number(code.value),
+        type: code.type,
+        description: code.description,
+      },
+    ],
+    ...(medication.atc ? { atc: medication.atc } : {}),
+    quantity: code.quantity,
+    // CreateRx expects the coded G-Standaard dosage instruction (e.g. "4D1C MVOE 1W") to
+    // populate its structured Frequentie/Tijd/Aantal/Eenheid fields — the free-text `.user`
+    // rendering isn't reliably parsed and leaves fields like Tijd/Eenheid blank.
+    ...(code.directions
+      ? { directions: typeof code.directions === 'string' ? code.directions : code.directions.coded }
+      : {}),
+  };
+}
+
 // The legacy JSON API only accepts current medication as a PRK or HPK code — a GPK
 // (or any other) code from a session result can't be sent back, so it's dropped.
 function toPrescriptorMedications(medications: readonly Medication[]): PrescriptorMedication[] {
@@ -110,6 +150,7 @@ export class PrescriptorService {
 
   private activeSessionId: string | null = null;
   private activePatientId: string | null = null;
+  private activeEditingMedicationId: string | null = null;
   private readonly fetchedSessionIds = new Set<string>();
 
   private readonly resultStatusState = signal<PrescriptorResultStatus>('idle');
@@ -127,7 +168,12 @@ export class PrescriptorService {
     this.window?.addEventListener('message', (event: MessageEvent) => this.handleMessage(event));
   }
 
-  async createSession(type: PrescriptorSessionType, icpc?: string): Promise<PrescriptorSession> {
+  async createSession(
+    type: PrescriptorSessionType,
+    icpc?: string,
+    prescription?: PrescriptorPrescription,
+    editingMedicationId?: string,
+  ): Promise<PrescriptorSession> {
     const patient = this.patientStore.selectedPatient();
 
     if (!patient) {
@@ -156,6 +202,7 @@ export class PrescriptorService {
 
     const body = {
       ...(type === 'formulary' ? { icpc } : {}),
+      ...(prescription ? { prescription } : {}),
       patient: {
         gender: patient.gender,
         dob: patient.dob,
@@ -189,6 +236,7 @@ export class PrescriptorService {
 
     this.activeSessionId = data.sessionId;
     this.activePatientId = patient.id;
+    this.activeEditingMedicationId = editingMedicationId ?? null;
     this.resultStatusState.set('idle');
     this.resultErrorState.set(null);
 
@@ -221,10 +269,12 @@ export class PrescriptorService {
   private async handleSessionEnded() {
     const sessionId = this.activeSessionId;
     const patientId = this.activePatientId;
+    const editingMedicationId = this.activeEditingMedicationId;
     if (!sessionId || !patientId || this.fetchedSessionIds.has(sessionId)) {
       return;
     }
     this.fetchedSessionIds.add(sessionId);
+    this.activeEditingMedicationId = null;
 
     this.resultStatusState.set('loading');
     this.resultErrorState.set(null);
@@ -236,6 +286,12 @@ export class PrescriptorService {
         this.medicationStore.addMany(patientId, result.drugs, sessionId),
         this.adviceStore.addMany(patientId, result.advices, sessionId),
       ]);
+
+      // An edit session's result replaces the medication it was started from,
+      // rather than sitting alongside it as a duplicate.
+      if (editingMedicationId) {
+        await this.medicationStore.remove(editingMedicationId);
+      }
 
       this.resultStatusState.set('resolved');
     } catch (error) {
