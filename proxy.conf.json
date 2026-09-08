@@ -1,0 +1,7 @@
+{
+  "/ajax/**": {
+    "target": "https://hostapp.digitalis.nl",
+    "secure": true,
+    "changeOrigin": true
+  }
+}

@@ -1,3 +1,67 @@
 /* You can add global styles to this file, and also import other style files */
 
 @import 'tailwindcss';
+
+@theme {
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-header: 'Bitter', ui-serif, Georgia, serif;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-size: 0.875rem;
+}
+
+.header-text {
+  font-family: var(--font-header);
+  font-size: 1.125rem;
+  font-weight: 500;
+}
+
+@layer base {
+  label {
+    display: block;
+    font-weight: 500;
+    margin: 0.125rem 0;
+  }
+
+  th {
+    font-weight: 400;
+    text-align: left;
+  }
+
+  pre {
+    @apply max-h-[min(40rem,75vh)] overflow-auto rounded border border-gray-200 bg-gray-50 p-2 text-xs break-all whitespace-pre-wrap text-gray-700;
+  }
+
+  button {
+    cursor: pointer;
+  }
+
+  /* Native search-input chrome (clear button, magnifier) has a tiny,
+     non-resizable, cross-browser-inconsistent hit area — every search input
+     in this app supplies its own icon and a real, properly sized clear
+     button instead. */
+  input[type='search'] {
+    appearance: none;
+    -webkit-appearance: none;
+  }
+
+  input[type='search']::-webkit-search-cancel-button,
+  input[type='search']::-webkit-search-decoration {
+    appearance: none;
+    -webkit-appearance: none;
+    display: none;
+  }
+}
+
+@layer components {
+  .primary {
+    @apply rounded bg-blue-600 font-semibold text-white hover:bg-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600;
+  }
+}
