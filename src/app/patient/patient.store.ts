@@ -84,20 +84,6 @@ export class PatientStore {
     }
   }
 
-  async movePatient(id: string, direction: 'up' | 'down') {
-    const patients = this.patientsState();
-    const index = patients.findIndex((patient) => patient.id === id);
-    const targetIndex = direction === 'up' ? index - 1 : index + 1;
-
-    if (index === -1 || targetIndex < 0 || targetIndex >= patients.length) {
-      return;
-    }
-
-    const next = [...patients];
-    [next[index], next[targetIndex]] = [next[targetIndex], next[index]];
-    await this.persistOrder(next);
-  }
-
   async reorderPatient(previousIndex: number, currentIndex: number) {
     const next = [...this.patientsState()];
     const [moved] = next.splice(previousIndex, 1);

@@ -13,7 +13,7 @@ import { SettingsStore } from '../settings.store';
       <label class="flex items-start align gap-3 text-sm">
         <input
           type="checkbox"
-          class="mt-3 size-4 shrink-0 rounded border-gray-300 text-blue-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+          class="mt-3 size-4 shrink-0 rounded-lg border-gray-300 text-blue-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
           [checked]="settingsStore.demoMode()"
           (change)="onDemoModeChange($event)"
         />

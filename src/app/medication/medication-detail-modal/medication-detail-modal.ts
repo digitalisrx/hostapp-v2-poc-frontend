@@ -14,12 +14,12 @@ type ViewMode = 'list' | 'json';
       <svg modalIcon lucidePillBottle [size]="20"></svg>
 
       @if (medications().length) {
-        <div class="mb-3 inline-flex rounded-md border border-gray-200 bg-gray-50 p-0.5 text-xs" role="tablist">
+        <div class="mb-3 inline-flex rounded-lg border border-gray-200 bg-gray-50 p-0.5 text-xs" role="tablist">
           <button
             type="button"
             role="tab"
             [attr.aria-selected]="viewMode() === 'list'"
-            class="rounded px-2.5 py-1 font-medium text-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+            class="rounded-lg px-2.5 py-1 font-medium text-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
             [class.bg-white]="viewMode() === 'list'"
             [class.shadow-sm]="viewMode() === 'list'"
             [class.text-gray-900]="viewMode() === 'list'"
@@ -31,7 +31,7 @@ type ViewMode = 'list' | 'json';
             type="button"
             role="tab"
             [attr.aria-selected]="viewMode() === 'json'"
-            class="rounded px-2.5 py-1 font-medium text-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+            class="rounded-lg px-2.5 py-1 font-medium text-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
             [class.bg-white]="viewMode() === 'json'"
             [class.shadow-sm]="viewMode() === 'json'"
             [class.text-gray-900]="viewMode() === 'json'"
@@ -52,7 +52,7 @@ type ViewMode = 'list' | 'json';
                 <div class="flex items-center gap-2">
                   <span class="min-w-0 truncate text-sm font-medium text-gray-900">{{ drug.description }}</span>
                   @if (drug.opium) {
-                    <span class="shrink-0 rounded bg-red-50 px-2 py-0.5 text-xs text-red-600">Opium</span>
+                    <span class="shrink-0 rounded-lg bg-red-50 px-2 py-0.5 text-xs text-red-600">Opium</span>
                   }
                 </div>
 

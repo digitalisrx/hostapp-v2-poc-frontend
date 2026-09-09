@@ -1,14 +1,17 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { SafeResourceUrl } from '@angular/platform-browser';
-import { RouterOutlet } from '@angular/router';
-import { LucideBug, LucideUser, LucideLogOut, LucideSettings } from '@lucide/angular';
-import { AuthStore } from './auth/auth.store';
-import { LoginModal } from './auth/login-modal/login-modal';
+import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
+import { filter, map, startWith } from 'rxjs';
+import { LucideBug, LucideBuilding2, LucideLogOut, LucideSettings, LucideTarget } from '@lucide/angular';
+import { AuthStore, AuthUser } from './auth/auth.store';
+import { OrganizationModal } from './auth/organization-modal/organization-modal';
 import { DebugModal } from './debug/debug-modal/debug-modal';
 import { PatientSidebar } from './patient-sidebar/patient-sidebar';
 import { PrescriptorPrescription, PrescriptorService, PrescriptorSessionType } from './prescriptor.service';
 import { PrescriptorView } from './prescriptor-view/prescriptor-view';
 import { SettingsModal } from './settings/settings-modal/settings-modal';
+import { TargetsModal } from './targets/targets-modal/targets-modal';
 
 @Component({
   imports: [
@@ -16,20 +19,23 @@ import { SettingsModal } from './settings/settings-modal/settings-modal';
     PatientSidebar,
     PrescriptorView,
     DebugModal,
-    LoginModal,
+    OrganizationModal,
     SettingsModal,
+    TargetsModal,
     LucideBug,
-    LucideUser,
+    LucideBuilding2,
     LucideLogOut,
     LucideSettings,
+    LucideTarget,
   ],
   selector: 'app-root',
-  host: { class: 'flex h-screen w-full flex-col overflow-hidden' },
+  host: { class: 'flex h-screen w-full flex-col overflow-hidden', '(document:click)': 'closeAccountMenu()' },
   styleUrl: './app.css',
   templateUrl: './app.html',
 })
 export class App {
   private prescriptorService = inject(PrescriptorService);
+  private readonly router = inject(Router);
   protected readonly authStore = inject(AuthStore);
 
   protected readonly title = signal('hostapp-new');
@@ -40,7 +46,30 @@ export class App {
 
   protected readonly debugModalOpen = signal(false);
   protected readonly settingsModalOpen = signal(false);
-  protected readonly loginModalOpen = signal(false);
+  protected readonly targetsModalOpen = signal(false);
+  protected readonly organizationModalOpen = signal(false);
+  protected readonly accountMenuOpen = signal(false);
+
+  private readonly currentUrl = toSignal(
+    this.router.events.pipe(
+      filter((event): event is NavigationEnd => event instanceof NavigationEnd),
+      map((event) => event.urlAfterRedirects),
+      startWith(this.router.url),
+    ),
+    { initialValue: this.router.url },
+  );
+  protected readonly isLoginPage = computed(() => this.currentUrl().startsWith('/login'));
+
+  constructor() {
+    effect(() => {
+      if (!this.authStore.sessionChecked() || this.isLoginPage()) {
+        return;
+      }
+      if (!this.authStore.user()) {
+        this.router.navigateByUrl('/login');
+      }
+    });
+  }
 
   async runSession(
     type: PrescriptorSessionType,
@@ -63,5 +92,43 @@ export class App {
         error instanceof Error ? error.message : 'Het starten van de Prescriptor-sessie is mislukt.',
       );
     }
+  }
+
+  protected toggleAccountMenu(event: Event) {
+    event.stopPropagation();
+    this.accountMenuOpen.update((open) => !open);
+  }
+
+  protected closeAccountMenu() {
+    this.accountMenuOpen.set(false);
+  }
+
+  protected openSettings(event: Event) {
+    event.stopPropagation();
+    this.accountMenuOpen.set(false);
+    this.settingsModalOpen.set(true);
+  }
+
+  protected openTargets(event: Event) {
+    event.stopPropagation();
+    this.accountMenuOpen.set(false);
+    this.targetsModalOpen.set(true);
+  }
+
+  protected openOrganization(event: Event) {
+    event.stopPropagation();
+    this.accountMenuOpen.set(false);
+    this.organizationModalOpen.set(true);
+  }
+
+  protected logout(event: Event) {
+    event.stopPropagation();
+    this.accountMenuOpen.set(false);
+    this.authStore.logout();
+  }
+
+  protected initialFor(user: AuthUser): string {
+    const source = user.email ?? user.userId;
+    return source ? source.charAt(0).toUpperCase() : '?';
   }
 }

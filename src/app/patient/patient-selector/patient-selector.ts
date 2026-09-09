@@ -11,7 +11,7 @@ import { PatientStore } from '../patient.store';
     <div>
       <button
         type="button"
-        class="flex w-full items-center gap-2 !font-normal rounded border border-gray-300 px-3 py-1.5 min-h-9 text-left text-sm hover:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+        class="flex w-full items-center gap-2 !font-normal rounded-lg border border-gray-300 px-3 py-1.5 min-h-9 text-left text-sm hover:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
         (click)="modalOpen.set(true)"
       >
         <svg lucideUser [size]="selectedPatient() ? 18 : 14" class="shrink-0 text-gray-500"></svg>

@@ -10,7 +10,7 @@ import { LucidePlus } from '@lucide/angular';
       @if (addLabel(); as addLabel) {
         <button
           type="button"
-          class="flex size-6 items-center justify-center rounded text-gray-500 hover:bg-gray-100 hover:text-gray-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+          class="flex size-6 items-center justify-center rounded-md text-gray-500 hover:bg-gray-100 hover:text-gray-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
           [attr.aria-label]="addLabel"
           (click)="add.emit()"
         >

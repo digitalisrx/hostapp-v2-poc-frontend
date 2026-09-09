@@ -225,6 +225,7 @@ export class PrescriptorService {
       headers: {
         'Content-Type': 'application/json',
       },
+      credentials: 'include',
       body: JSON.stringify(body),
     });
 
@@ -305,6 +306,7 @@ export class PrescriptorService {
   private async fetchResult(sessionId: string): Promise<PrescriptorResult> {
     const response = await fetch(
       `${BACKEND_ORIGIN}/api/prescriptor/result/${sessionId}?transport=${TRANSPORT}`,
+      { credentials: 'include' },
     );
 
     if (!response.ok) {

@@ -33,13 +33,13 @@ interface LabEntryModel {
             <input
               type="text"
               readonly
-              class="w-full rounded border border-gray-300 bg-gray-50 py-2 pr-8 pl-3 text-sm text-gray-900"
+              class="w-full rounded-lg border border-gray-300 bg-gray-50 py-2 pr-8 pl-3 text-sm text-gray-900"
               [value]="measuredLabel()"
             />
             @if (!editing()) {
               <button
                 type="button"
-                class="absolute top-1/2 right-2 flex size-6 -translate-y-1/2 items-center justify-center rounded text-gray-400 hover:bg-red-50 hover:text-red-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+                class="absolute top-1/2 right-2 flex size-6 -translate-y-1/2 items-center justify-center rounded-lg text-gray-400 hover:bg-red-50 hover:text-red-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
                 aria-label="Andere labcode kiezen"
                 (click)="deselectCode()"
               >
@@ -56,7 +56,7 @@ interface LabEntryModel {
               type="number"
               autofocus
               step="1"
-              class="w-full rounded border border-gray-300 px-3 py-2 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+              class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
               [formField]="entryForm.daysAgo"
             />
             @if (entryForm.daysAgo().touched() && entryForm.daysAgo().invalid()) {
@@ -74,7 +74,7 @@ interface LabEntryModel {
             <input
               type="number"
               step="any"
-              class="w-full rounded border border-gray-300 px-3 py-2 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+              class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
               [formField]="entryForm.value"
             />
             @if (entryForm.value().touched() && entryForm.value().invalid()) {
@@ -85,7 +85,7 @@ interface LabEntryModel {
           </label>
 
           @if (store.actionError(); as error) {
-            <p class="rounded-md border border-red-300 bg-red-50 px-3 py-2 text-sm text-red-800" role="alert">
+            <p class="rounded-lg border border-red-300 bg-red-50 px-3 py-2 text-sm text-red-800" role="alert">
               {{ error }}
             </p>
           }
@@ -93,7 +93,7 @@ interface LabEntryModel {
           <div class="mt-1 flex justify-end gap-2">
             <button
               type="button"
-              class="rounded border border-gray-300 px-3 py-2 text-sm hover:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+              class="rounded-lg border border-gray-300 px-3 py-2 text-sm hover:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
               (click)="editing() ? handleClose() : deselectCode()"
             >
               {{ editing() ? 'Annuleren' : 'Terug' }}
@@ -117,14 +117,14 @@ interface LabEntryModel {
               type="search"
               autofocus
               placeholder="Zoeken op code of omschrijving"
-              class="w-full rounded border border-gray-300 py-2 pr-8 pl-8 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+              class="w-full rounded-lg border border-gray-300 py-2 pr-8 pl-8 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
               [value]="searchTerm()"
               (input)="onSearchInput($event)"
             />
             @if (searchTerm()) {
               <button
                 type="button"
-                class="absolute top-1/2 right-2 flex size-6 -translate-y-1/2 items-center justify-center rounded text-gray-400 hover:bg-red-50 hover:text-red-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+                class="absolute top-1/2 right-2 flex size-6 -translate-y-1/2 items-center justify-center rounded-lg text-gray-400 hover:bg-red-50 hover:text-red-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
                 aria-label="Zoekopdracht wissen"
                 (click)="clearSearch()"
               >
@@ -134,7 +134,7 @@ interface LabEntryModel {
           </div>
         </label>
 
-        <ul class="max-h-72 divide-y divide-gray-100 overflow-y-auto rounded-md border border-gray-200">
+        <ul class="max-h-72 divide-y divide-gray-100 overflow-y-auto rounded-lg border border-gray-200">
           @switch (searchResource.status()) {
             @case ('loading') {
               <li class="px-3 py-4 text-center text-sm text-gray-500">Zoeken...</li>

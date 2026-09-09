@@ -67,7 +67,7 @@ function clamp(value: number, min: number, max: number): number {
         }
         <button
           type="button"
-          class="flex justify-center items-center size-8 ml-auto rounded p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+          class="flex justify-center items-center size-8 ml-auto rounded-lg p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
           [attr.aria-expanded]="!collapsed()"
           [attr.aria-label]="collapsed() ? 'Zijbalk uitklappen' : 'Zijbalk inklappen'"
           (click)="toggleCollapsed()"
@@ -146,7 +146,7 @@ function clamp(value: number, min: number, max: number): number {
       </div>
 
       @if (!collapsed()) {
-        <div class="relative flex gap-1.5 border-t border-gray-200 p-3">
+        <div class="relative flex gap-0 border-t border-gray-200 p-3">
           <button
             type="button"
             class="primary flex flex-1 items-center justify-center gap-1.5 rounded-r-none px-3 py-2 text-sm"
@@ -162,18 +162,18 @@ function clamp(value: number, min: number, max: number): number {
 
           <button
             type="button"
-            class="flex items-center justify-center rounded rounded-l-none border border-gray-300 px-2 text-gray-500 hover:bg-gray-50 hover:text-gray-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+            class="flex items-center justify-center rounded-lg rounded-l-none border border-gray-300 px-1 text-gray-500 hover:bg-gray-50 hover:text-gray-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
             [attr.aria-expanded]="modeMenuOpen()"
             aria-haspopup="true"
             aria-label="Modus kiezen"
             (click)="toggleModeMenu($event)"
           >
-            <svg lucideChevronUp [size]="16"></svg>
+            <svg lucideChevronUp [size]="18"></svg>
           </button>
 
           @if (modeMenuOpen()) {
             <div
-              class="absolute right-2 bottom-full left-2 overflow-hidden rounded-md border border-gray-200 bg-white text-sm shadow-lg"
+              class="absolute right-2 bottom-full left-2 overflow-hidden rounded-lg border border-gray-200 bg-white text-sm shadow-lg"
             >
               <button
                 type="button"

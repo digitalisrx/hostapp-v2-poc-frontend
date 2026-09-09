@@ -14,7 +14,7 @@ let nextModalId = 0;
         <div class="absolute inset-0 flex items-center justify-center p-4" (click)="close.emit()">
           <div
             #panel
-            [class]="'flex max-h-[85dvh] w-full flex-col overflow-hidden rounded-lg bg-white shadow-xl ' + maxWidth()"
+            [class]="'flex max-h-[85dvh] w-full flex-col overflow-hidden rounded-xl bg-white shadow-xl ' + maxWidth()"
             role="dialog"
             aria-modal="true"
             [attr.aria-labelledby]="titleId"
@@ -30,7 +30,7 @@ let nextModalId = 0;
               <span [id]="titleId" class="flex-1 header-text">{{ title() }}</span>
               <button
                 type="button"
-                class="flex justify-center items-center size-8 rounded text-gray-500 hover:bg-gray-100 hover:text-gray-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+                class="flex justify-center items-center size-8 rounded-lg text-gray-500 hover:bg-gray-100 hover:text-gray-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
                 aria-label="Dialoogvenster sluiten"
                 (click)="close.emit()"
               >

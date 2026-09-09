@@ -1,56 +1,89 @@
-<header class="flex h-12 w-full shrink-0 items-center border-b border-gray-200 bg-white pl-3 pr-2">
-  <span class="header-text">{{ title() }}</span>
+@if (!isLoginPage()) {
+  @if (authStore.user(); as user) {
+    <header class="flex h-12 w-full shrink-0 items-center border-b border-gray-200 bg-white pl-3 pr-2">
+      <span class="header-text"> Digitalis </span>
 
-  <div class="ml-auto flex items-center gap-2">
-    <button
-      type="button"
-      class="flex size-8 items-center justify-center rounded p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
-      aria-label="Debug"
-      (click)="debugModalOpen.set(true)"
-    >
-      <svg lucideBug [size]="18"></svg>
-    </button>
-    <button
-      type="button"
-      class="flex size-8 items-center justify-center rounded p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
-      aria-label="Instellingen"
-      (click)="settingsModalOpen.set(true)"
-    >
-      <svg lucideSettings [size]="18"></svg>
-    </button>
-    @if (authStore.user(); as user) {
-      <span class="hidden max-w-32 truncate text-sm text-gray-600 sm:block">{{ user.email }}</span>
-      <button
-        type="button"
-        class="flex size-8 items-center justify-center rounded p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
-        aria-label="Uitloggen"
-        (click)="authStore.logout()"
-      >
-        <svg lucideLogOut [size]="18"></svg>
-      </button>
-    } @else {
-      <button
-        type="button"
-        class="flex size-8 items-center justify-center rounded p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
-        aria-label="Inloggen"
-        (click)="loginModalOpen.set(true)"
-      >
-        <svg lucideUser [size]="18"></svg>
-      </button>
-    }
-  </div>
-</header>
+      <div class="ml-auto flex items-center gap-2">
+        <button
+          type="button"
+          class="flex size-8 items-center justify-center rounded-lg p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+          aria-label="Debug"
+          (click)="debugModalOpen.set(true)"
+        >
+          <svg lucideBug [size]="18"></svg>
+        </button>
+        <div class="relative">
+          <button
+            type="button"
+            class="flex size-8 items-center justify-center rounded-lg bg-blue-600 text-sm font-semibold text-white hover:bg-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+            [attr.aria-expanded]="accountMenuOpen()"
+            aria-haspopup="true"
+            [attr.aria-label]="'Account: ' + (user.email ?? user.userId)"
+            (click)="toggleAccountMenu($event)"
+          >
+            {{ initialFor(user) }}
+          </button>
 
-<main class="flex min-h-0 w-full flex-1 overflow-hidden">
-  <app-patient-sidebar
-    [activeSessionType]="activeSessionType()"
-    (runSession)="runSession($event.type, $event.icpc, $event.prescription, $event.editingMedicationId)"
-  />
-  <app-prescriptor-view [iframeUrl]="iframeUrl()" [errorMessage]="errorMessage()" />
-</main>
+          @if (accountMenuOpen()) {
+            <div
+              class="absolute top-full right-0 mt-1 w-56 overflow-hidden rounded-lg border border-gray-200 bg-white text-sm shadow-lg"
+            >
+              <p class="truncate px-3 py-2 text-gray-500">{{ user.email ?? user.userId }}</p>
+              <button
+                type="button"
+                class="flex w-full items-center gap-2 border-t border-gray-100 px-3 py-2 text-left hover:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+                (click)="openSettings($event)"
+              >
+                <svg lucideSettings [size]="16"></svg>
+                Instellingen
+              </button>
+              <button
+                type="button"
+                class="flex w-full items-center gap-2 border-t border-gray-100 px-3 py-2 text-left hover:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+                (click)="openTargets($event)"
+              >
+                <svg lucideTarget [size]="16"></svg>
+                Targets
+              </button>
+              @if (user.hasPrescriptorLicenseKey) {
+                <button
+                  type="button"
+                  class="flex w-full items-center gap-2 border-t border-gray-100 px-3 py-2 text-left hover:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+                  (click)="openOrganization($event)"
+                >
+                  <svg lucideBuilding2 [size]="16"></svg>
+                  Organisatie
+                </button>
+              }
+              <button
+                type="button"
+                class="flex w-full items-center gap-2 border-t border-gray-100 px-3 py-2 text-left hover:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+                (click)="logout($event)"
+              >
+                <svg lucideLogOut [size]="16"></svg>
+                Uitloggen
+              </button>
+            </div>
+          }
+        </div>
+      </div>
+    </header>
 
-<app-debug-modal [open]="debugModalOpen()" (close)="debugModalOpen.set(false)" />
-<app-settings-modal [open]="settingsModalOpen()" (close)="settingsModalOpen.set(false)" />
-<app-login-modal [open]="loginModalOpen()" (close)="loginModalOpen.set(false)" />
+    <main class="flex min-h-0 w-full flex-1 overflow-hidden">
+      <app-patient-sidebar
+        [activeSessionType]="activeSessionType()"
+        (runSession)="runSession($event.type, $event.icpc, $event.prescription, $event.editingMedicationId)"
+      />
+      <app-prescriptor-view [iframeUrl]="iframeUrl()" [errorMessage]="errorMessage()" />
+    </main>
+
+    <app-debug-modal [open]="debugModalOpen()" (close)="debugModalOpen.set(false)" />
+    <app-settings-modal [open]="settingsModalOpen()" (close)="settingsModalOpen.set(false)" />
+    <app-targets-modal [open]="targetsModalOpen()" (close)="targetsModalOpen.set(false)" />
+    <app-organization-modal [open]="organizationModalOpen()" (close)="organizationModalOpen.set(false)" />
+  } @else {
+    <div class="flex h-screen w-full items-center justify-center text-sm text-gray-500">Laden…</div>
+  }
+}
 
 <router-outlet />

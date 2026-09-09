@@ -9,12 +9,12 @@ import { SettingsStore } from '../settings/settings.store';
   template: `
     <div class="flex h-full w-full flex-col overflow-hidden bg-gray-50">
       @if (errorMessage(); as error) {
-        <div class="m-3 rounded-md border border-red-300 bg-red-50 p-3 text-sm text-red-800" role="alert">
+        <div class="m-3 rounded-lg border border-red-300 bg-red-50 p-3 text-sm text-red-800" role="alert">
           <p class="font-semibold">Prescriptor kan niet worden geladen</p>
           <p class="mt-1">{{ error }}</p>
         </div>
       } @else if (resultStatus() === 'error') {
-        <div class="m-3 rounded-md border border-red-300 bg-red-50 p-3 text-sm text-red-800" role="alert">
+        <div class="m-3 rounded-lg border border-red-300 bg-red-50 p-3 text-sm text-red-800" role="alert">
           <p class="font-semibold">Ophalen van het resultaat is mislukt</p>
           <p class="mt-1">{{ resultError() }}</p>
         </div>
