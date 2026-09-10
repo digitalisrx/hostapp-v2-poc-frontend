@@ -94,7 +94,7 @@ import { PatientStore } from '../patient.store';
         </div>
       }
 
-      <div class="overflow-hidden rounded-lg border border-gray-200">
+      <div class="max-h-72 overflow-y-auto rounded-lg border border-gray-200">
         <table class="w-full text-left text-sm">
           <thead class="tracking-wide border-b border-gray-200 text-gray-500">
             <tr>

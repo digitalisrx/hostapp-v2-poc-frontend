@@ -1,6 +1,7 @@
 import { Component, ElementRef, inject, input, output, resource, signal, viewChild } from '@angular/core';
 import { LucideCircleAlert, LucideSearch, LucideX } from '@lucide/angular';
 import { Modal } from '../../shared/modal/modal';
+import { AllergyCodeChip } from '../allergy-code-chip/allergy-code-chip';
 import { Allergy } from '../allergy.model';
 import { AllergyStore } from '../allergy.store';
 import { AllergySearchService } from '../allergy-search.service';
@@ -10,7 +11,7 @@ const MIN_SEARCH_LENGTH = 2;
 
 @Component({
   selector: 'app-allergy-modal',
-  imports: [Modal, LucideCircleAlert, LucideSearch, LucideX],
+  imports: [Modal, AllergyCodeChip, LucideCircleAlert, LucideSearch, LucideX],
   template: `
     <app-modal [open]="open()" title="Allergieën toevoegen" (close)="close.emit()">
       <svg modalIcon lucideCircleAlert [size]="20"></svg>
@@ -63,16 +64,16 @@ const MIN_SEARCH_LENGTH = 2;
               } @else {
                 @for (result of results; track result.id) {
                   <li>
-                    <label class="flex cursor-pointer items-center gap-2 p-2 text-sm hover:bg-gray-50">
+                    <div class="flex cursor-pointer items-center gap-2 p-2 text-sm hover:bg-gray-50" (click)="toggle(result)">
                       <input
                         type="checkbox"
                         class="size-4 shrink-0 rounded-lg border-gray-300 text-blue-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
                         [checked]="isAdded(result.id)"
-                        (change)="toggle(result)"
                       />
+                      <app-allergy-code-chip [type]="result.type" />
                       <span class="min-w-0 flex-1 truncate font-medium text-gray-900">{{ result.description }}</span>
                       <span class="w-16 shrink-0 truncate font-normal text-left text-gray-500 tabular-nums">{{ result.id }}</span>
-                    </label>
+                    </div>
                   </li>
                 }
               }

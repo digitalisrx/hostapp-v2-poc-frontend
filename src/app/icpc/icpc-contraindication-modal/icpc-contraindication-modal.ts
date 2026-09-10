@@ -2,8 +2,8 @@ import { Component, ElementRef, inject, input, output, resource, signal, viewChi
 import { LucideCircleAlert, LucideSearch, LucideX } from '@lucide/angular';
 import { Modal } from '../../shared/modal/modal';
 import { IcpcContraindication } from '../icpc.model';
+import { IcpcContraindicationSearchService } from '../icpc-contraindication-search.service';
 import { IcpcContraindicationStore } from '../icpc-contraindication.store';
-import { IcpcSearchService } from '../icpc-search.service';
 
 const SEARCH_DEBOUNCE_MS = 300;
 const MIN_SEARCH_LENGTH = 2;
@@ -84,7 +84,7 @@ const MIN_SEARCH_LENGTH = 2;
   `,
 })
 export class IcpcContraindicationModal {
-  private readonly icpcSearch = inject(IcpcSearchService);
+  private readonly icpcSearch = inject(IcpcContraindicationSearchService);
   private readonly store = inject(IcpcContraindicationStore);
 
   open = input.required<boolean>();

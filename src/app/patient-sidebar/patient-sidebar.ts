@@ -1,4 +1,5 @@
-import { Component, computed, inject, input, output, signal } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { Component, computed, effect, inject, input, output, signal } from '@angular/core';
 import {
   LucideCheck,
   LucideChevronUp,
@@ -24,6 +25,7 @@ const MIN_WIDTH = 240;
 const MAX_WIDTH = 700;
 const DEFAULT_WIDTH = 400;
 const COLLAPSED_WIDTH = 48;
+const WIDTH_STORAGE_KEY = 'app-patient-sidebar-width';
 const KEYBOARD_STEP = 16;
 const KEYBOARD_STEP_LARGE = 48;
 
@@ -249,8 +251,10 @@ export class PatientSidebar {
   protected readonly MAX_WIDTH = MAX_WIDTH;
   protected readonly COLLAPSED_WIDTH = COLLAPSED_WIDTH;
 
+  private readonly window = inject(DOCUMENT).defaultView;
+
   protected readonly collapsed = signal(false);
-  protected readonly width = signal(DEFAULT_WIDTH);
+  protected readonly width = signal(this.loadStoredWidth());
   protected readonly resizing = signal(false);
   protected readonly handleClass = computed(
     () =>
@@ -270,6 +274,17 @@ export class PatientSidebar {
   protected readonly icpcRunModalOpen = signal(false);
   protected readonly selectedMode = signal<PrescriptorSessionType>('formulary');
   protected readonly modeMenuOpen = signal(false);
+
+  constructor() {
+    effect(() => {
+      this.window?.localStorage.setItem(WIDTH_STORAGE_KEY, String(this.width()));
+    });
+  }
+
+  private loadStoredWidth(): number {
+    const stored = Number(this.window?.localStorage.getItem(WIDTH_STORAGE_KEY));
+    return Number.isFinite(stored) && stored > 0 ? clamp(stored, MIN_WIDTH, MAX_WIDTH) : DEFAULT_WIDTH;
+  }
 
   protected onIcpcSelected(icpc: string) {
     this.icpcRunModalOpen.set(false);

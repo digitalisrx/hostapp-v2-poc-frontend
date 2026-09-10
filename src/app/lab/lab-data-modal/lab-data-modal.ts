@@ -53,8 +53,8 @@ interface LabEntryModel {
           <label>
             Dagen geleden
             <input
+              #daysAgoInput
               type="number"
-              autofocus
               step="1"
               class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
               [formField]="entryForm.daysAgo"
@@ -211,6 +211,7 @@ export class LabDataModal {
   });
 
   private readonly searchInput = viewChild<ElementRef<HTMLInputElement>>('searchInput');
+  private readonly daysAgoInput = viewChild<ElementRef<HTMLInputElement>>('daysAgoInput');
   private debounceTimer: ReturnType<typeof setTimeout> | undefined;
 
   protected readonly entryModel = signal<LabEntryModel>({ daysAgo: 0, value: null });
@@ -235,6 +236,14 @@ export class LabDataModal {
       const editing = this.editing();
       if (editing) {
         this.entryModel.set({ daysAgo: editing.daysAgo, value: editing.value });
+      }
+    });
+
+    // The form step replaces the search step inside the same open modal, so Modal's own
+    // on-open autofocus (which already ran for the search input) never fires again here.
+    effect(() => {
+      if (this.showForm()) {
+        this.daysAgoInput()?.nativeElement.focus();
       }
     });
   }

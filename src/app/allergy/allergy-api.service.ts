@@ -11,6 +11,7 @@ interface AllergyDto {
   code: string;
   code_system: string;
   description: string | null;
+  type?: number | null;
 }
 
 export interface AllergyRecord {
@@ -19,7 +20,10 @@ export interface AllergyRecord {
 }
 
 function toRecord(dto: AllergyDto): AllergyRecord {
-  return { recordId: dto.id, item: { id: String(dto.code), description: dto.description ?? '' } };
+  return {
+    recordId: dto.id,
+    item: { id: String(dto.code), description: dto.description ?? '', type: dto.type ?? undefined },
+  };
 }
 
 @Service()
@@ -39,6 +43,7 @@ export class AllergyApiService {
         code: String(item.id),
         codeSystem: CODE_SYSTEM,
         description: item.description,
+        ...(item.type !== undefined ? { type: item.type } : {}),
       }),
     );
     return response.allergy.id;

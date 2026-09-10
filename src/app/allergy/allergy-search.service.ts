@@ -3,16 +3,20 @@ import { Service, inject } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { Allergy } from './allergy.model';
 
-const ALLERGY_SEARCH_URL = '/ajax/store/allergy';
+const CATALOG_SEARCH_URL = 'http://localhost:3000/api/prescriptor/catalog/search';
 
-interface AllergyDto {
+// OGGrp = generieke groep, SNK = stofnaamcode, SSK = toedieningsroute (joins `toedieningsweg`).
+// Matches the 1/2/3 convention the allergy chip already used for the third-party source.
+const TYPE_BY_CODE_SYSTEM: Record<string, number> = { OGGrp: 1, SNK: 2, SSK: 3 };
+
+interface CatalogSearchResult {
   code: string;
-  type: number;
-  name: string;
+  codeSystem: string;
+  display: string;
 }
 
-function toAllergy(dto: AllergyDto): Allergy {
-  return { id: String(dto.code), description: dto.name };
+function toAllergy(result: CatalogSearchResult): Allergy {
+  return { id: result.code, description: result.display, type: TYPE_BY_CODE_SYSTEM[result.codeSystem] };
 }
 
 @Service()
@@ -20,8 +24,8 @@ export class AllergySearchService {
   private readonly http = inject(HttpClient);
 
   async search(term: string): Promise<Allergy[]> {
-    const url = `${ALLERGY_SEARCH_URL}?searchStr=${encodeURIComponent(term)}`;
-    const dtos = await firstValueFrom(this.http.get<AllergyDto[]>(url));
-    return dtos.map(toAllergy);
+    const url = `${CATALOG_SEARCH_URL}?domain=allergy&q=${encodeURIComponent(term)}`;
+    const response = await firstValueFrom(this.http.get<{ items: CatalogSearchResult[] }>(url));
+    return response.items.map(toAllergy);
   }
 }

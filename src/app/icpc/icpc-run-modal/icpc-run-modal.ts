@@ -6,7 +6,7 @@ import { IcpcRunHistoryStore } from '../icpc-run-history.store';
 import { IcpcSearchService } from '../icpc-search.service';
 
 const SEARCH_DEBOUNCE_MS = 300;
-const MIN_SEARCH_LENGTH = 1;
+const MIN_SEARCH_LENGTH = 2;
 
 @Component({
   selector: 'app-icpc-run-modal',
@@ -63,7 +63,7 @@ const MIN_SEARCH_LENGTH = 1;
             }
           </ul>
         } @else {
-          <p class="px-1 py-2 text-sm text-gray-500">Typ minimaal 1 teken om te zoeken</p>
+          <p class="px-1 py-2 text-sm text-gray-500">Typ minimaal 2 tekens om te zoeken</p>
         }
       } @else {
         <ul class="max-h-72 divide-y divide-gray-100 overflow-y-auto rounded-lg border border-gray-200">

@@ -1,11 +1,12 @@
 import { Component, inject, signal } from '@angular/core';
 import { DeleteButton } from '../../shared/delete-button/delete-button';
+import { AllergyCodeChip } from '../allergy-code-chip/allergy-code-chip';
 import { AllergyModal } from '../allergy-modal/allergy-modal';
 import { AllergyStore } from '../allergy.store';
 
 @Component({
   selector: 'app-allergy-field',
-  imports: [DeleteButton, AllergyModal],
+  imports: [DeleteButton, AllergyCodeChip, AllergyModal],
   template: `
     @if (store.loadError(); as error) {
       <div
@@ -37,7 +38,12 @@ import { AllergyStore } from '../allergy.store';
           <tbody>
             @for (item of allergies(); track item.id) {
               <tr class="group border-t border-gray-100 first:border-t-0 hover:bg-gray-50">
-                <td class="w-full max-w-0 truncate py-1.5 pr-1.5 pl-3 font-medium text-gray-900">{{ item.description }}</td>
+                <td class="w-full max-w-0 py-1.5 px-1.5">
+                  <span class="flex items-center gap-1.5">
+                    <app-allergy-code-chip [type]="item.type" />
+                    <span class="truncate font-medium text-gray-900">{{ item.description }}</span>
+                  </span>
+                </td>
                 <td class="w-16 truncate py-1.5 pr-1.5 whitespace-nowrap text-gray-500 tabular-nums">{{ item.id }}</td>
                 <td class="w-8 py-1.5">
                   <app-delete-button
