@@ -27,7 +27,8 @@ export class AuthStore {
   readonly sessionChecked = this.sessionCheckedState.asReadonly();
 
   constructor() {
-    void this.checkSession();
+    // Defer call to prevent circular depencency
+    setTimeout(() => void this.checkSession(), 0);
   }
 
   /** Backend sessions are in-memory only, so check on load rather than trusting local state. */

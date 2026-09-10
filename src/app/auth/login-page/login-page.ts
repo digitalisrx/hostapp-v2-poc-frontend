@@ -14,7 +14,7 @@ interface LoginModel {
   imports: [FormField, LucideUser],
   template: `
     <div class="flex h-screen w-full items-center justify-center bg-gradient-to-br from-blue-50 to-blue-200 p-4">
-      <div class="w-full max-w-sm rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+      <div class="w-full max-w-sm rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
         <div class="mb-4 flex flex-col items-center gap-2 text-center">
           <span class="flex size-10 items-center justify-center rounded-lg bg-blue-600 text-white">
             <svg lucideUser [size]="20"></svg>

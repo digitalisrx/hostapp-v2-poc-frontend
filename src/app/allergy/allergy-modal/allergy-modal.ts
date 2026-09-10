@@ -71,7 +71,7 @@ const MIN_SEARCH_LENGTH = 2;
                         (change)="toggle(result)"
                       />
                       <span class="min-w-0 flex-1 truncate font-medium text-gray-900">{{ result.description }}</span>
-                      <span class="w-16 shrink-0 truncate text-left text-gray-500 tabular-nums">{{ result.id }}</span>
+                      <span class="w-16 shrink-0 truncate font-normal text-left text-gray-500 tabular-nums">{{ result.id }}</span>
                     </label>
                   </li>
                 }
