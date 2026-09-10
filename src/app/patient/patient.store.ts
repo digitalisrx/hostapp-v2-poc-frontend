@@ -1,10 +1,12 @@
-import { Service, computed, inject, signal } from '@angular/core';
+import { Service, computed, effect, inject, signal } from '@angular/core';
+import { AuthStore } from '../auth/auth.store';
 import { PatientApiService } from './patient-api.service';
 import { Patient } from './patient.model';
 
 @Service()
 export class PatientStore {
   private readonly api = inject(PatientApiService);
+  private readonly authStore = inject(AuthStore);
 
   private readonly patientsState = signal<Patient[]>([]);
   private readonly selectedPatientId = signal<string | null>(null);
@@ -20,25 +22,47 @@ export class PatientStore {
     () => this.patientsState().find((patient) => patient.id === this.selectedPatientId()) ?? null,
   );
 
+  private readonly selectedOrganizationId = computed(() => this.authStore.user()?.selectedOrganizationId ?? null);
+
   constructor() {
-    this.loadPatients();
+    effect(() => {
+      const organizationId = this.selectedOrganizationId();
+      // A patient list belongs to a single organization — switching organizations invalidates
+      // the current selection, since a matching patient id would refer to a different patient.
+      this.selectedPatientId.set(null);
+      this.loadPatients(organizationId);
+    });
   }
 
-  async loadPatients() {
+  async loadPatients(organizationId: string | null = this.selectedOrganizationId()) {
+    if (!organizationId) {
+      this.patientsState.set([]);
+      this.loadingState.set(false);
+      this.loadErrorState.set(null);
+      return;
+    }
+
     this.loadingState.set(true);
     this.loadErrorState.set(null);
 
     try {
       const patients = await this.api.getPatients();
+      if (this.selectedOrganizationId() !== organizationId) {
+        return;
+      }
       this.patientsState.set(patients);
-
-      if (this.selectedPatientId() === null) {
+      if (!patients.some((patient) => patient.id === this.selectedPatientId())) {
         this.selectedPatientId.set(patients[0]?.id ?? null);
       }
     } catch (error) {
+      if (this.selectedOrganizationId() !== organizationId) {
+        return;
+      }
       this.loadErrorState.set(error instanceof Error ? error.message : 'Patiënten laden mislukt.');
     } finally {
-      this.loadingState.set(false);
+      if (this.selectedOrganizationId() === organizationId) {
+        this.loadingState.set(false);
+      }
     }
   }
 
@@ -54,6 +78,19 @@ export class PatientStore {
       this.selectedPatientId.set(patient.id);
     }
     return patient;
+  }
+
+  async duplicatePatient(id: string): Promise<Patient | null> {
+    this.actionErrorState.set(null);
+
+    try {
+      const patient = await this.api.duplicatePatient(id);
+      this.patientsState.update((patients) => [...patients, patient]);
+      return patient;
+    } catch (error) {
+      this.actionErrorState.set(error instanceof Error ? error.message : 'Patiënt dupliceren mislukt.');
+      return null;
+    }
   }
 
   async updatePatient(id: string, updates: Partial<Omit<Patient, 'id'>>) {

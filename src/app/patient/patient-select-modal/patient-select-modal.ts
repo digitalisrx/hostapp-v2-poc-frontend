@@ -1,6 +1,7 @@
 import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
 import { Component, ElementRef, computed, inject, input, output, signal, viewChild } from '@angular/core';
 import {
+  LucideCopy,
   LucideGripVertical,
   LucidePencil,
   LucideSearch,
@@ -19,6 +20,7 @@ import { PatientStore } from '../patient.store';
   imports: [
     Modal,
     DragDropModule,
+    LucideCopy,
     LucideGripVertical,
     LucidePencil,
     LucideSearch,
@@ -100,7 +102,7 @@ import { PatientStore } from '../patient.store';
               <th class="px-3 py-2">Naam</th>
               <th class="px-3 py-2">Geslacht</th>
               <th class="px-3 py-2">Geboortedatum</th>
-              <th class="w-16 px-3 py-2"><span class="sr-only">Acties</span></th>
+              <th class="w-24 px-3 py-2"><span class="sr-only">Acties</span></th>
             </tr>
           </thead>
           <tbody
@@ -147,6 +149,14 @@ import { PatientStore } from '../patient.store';
                       (click)="editOne(patient, $event)"
                     >
                       <svg lucidePencil [size]="16"></svg>
+                    </button>
+                    <button
+                      type="button"
+                      class="rounded-lg p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+                      [attr.aria-label]="patient.name + ' dupliceren'"
+                      (click)="duplicateOne(patient.id, $event)"
+                    >
+                      <svg lucideCopy [size]="16"></svg>
                     </button>
                     <button
                       type="button"
@@ -227,6 +237,11 @@ export class PatientSelectModal {
   protected deleteOne(id: string, event: Event) {
     event.stopPropagation();
     this.patientStore.deletePatient(id);
+  }
+
+  protected duplicateOne(id: string, event: Event) {
+    event.stopPropagation();
+    this.patientStore.duplicatePatient(id);
   }
 
   protected onDrop(event: CdkDragDrop<unknown>) {

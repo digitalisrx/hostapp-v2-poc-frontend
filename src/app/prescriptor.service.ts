@@ -4,6 +4,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { AdviceStore } from './advice/advice.store';
 import { Advice } from './advice/advice.model';
 import { AllergyStore } from './allergy/allergy.store';
+import { AuthStore } from './auth/auth.store';
 import { GstandaardContraindicationStore } from './gstandaard/gstandaard-contraindication.store';
 import { IcpcContraindicationStore } from './icpc/icpc-contraindication.store';
 import { LabCodeSearchService } from './lab/lab-code-search.service';
@@ -146,6 +147,7 @@ export class PrescriptorService {
   private adviceStore = inject(AdviceStore);
   private labDataStore = inject(LabDataStore);
   private labCodeSearch = inject(LabCodeSearchService);
+  private authStore = inject(AuthStore);
   private window = inject(DOCUMENT).defaultView;
 
   private activeSessionId: string | null = null;
@@ -229,6 +231,8 @@ export class PrescriptorService {
       body: JSON.stringify(body),
     });
 
+    this.handleUnauthorized(response);
+
     if (!response.ok) {
       throw new Error(`Prescriptor-sessieaanvraag mislukt met status ${response.status}.`);
     }
@@ -309,6 +313,8 @@ export class PrescriptorService {
       { credentials: 'include' },
     );
 
+    this.handleUnauthorized(response);
+
     if (!response.ok) {
       throw new Error(`Ophalen van het Prescriptor-resultaat is mislukt met status ${response.status}.`);
     }
@@ -320,5 +326,13 @@ export class PrescriptorService {
       drugs: Array.isArray(data.drugs) ? data.drugs : [],
       advices: Array.isArray(data.advices) ? data.advices : [],
     };
+  }
+
+  // These calls use the native fetch API rather than HttpClient, so they aren't
+  // covered by the app-wide session-expired interceptor — handle it here too.
+  private handleUnauthorized(response: Response) {
+    if (response.status === 401 && this.authStore.user()) {
+      void this.authStore.logout();
+    }
   }
 }

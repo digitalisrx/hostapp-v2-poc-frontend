@@ -62,4 +62,11 @@ export class PatientApiService {
   async deletePatient(id: string): Promise<void> {
     await firstValueFrom(this.http.delete<void>(`${PATIENTS_URL}/${id}`));
   }
+
+  async duplicatePatient(id: string): Promise<Patient> {
+    const response = await firstValueFrom(
+      this.http.post<{ patient: PatientDto }>(`${PATIENTS_URL}/${id}/duplicate`, {}),
+    );
+    return toPatient(response.patient);
+  }
 }

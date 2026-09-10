@@ -19,15 +19,15 @@ import { AuthStore } from '../auth.store';
       <ul class="divide-y divide-gray-100 overflow-hidden rounded-lg border border-gray-200 text-sm">
         @for (organization of organizations(); track organization.id) {
           <li>
-            <label
+            <div
               class="flex w-full cursor-pointer items-center gap-3 px-3 py-2 hover:bg-gray-50 has-disabled:cursor-not-allowed has-disabled:opacity-40 has-disabled:hover:bg-transparent"
+              (click)="onCheckboxClick($event, organization.id)"
             >
               <input
                 type="checkbox"
                 class="size-4 shrink-0 rounded-lg border-gray-300 text-blue-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
                 [checked]="organization.id === selectedOrganizationId()"
                 [disabled]="!organization.enabled || selecting() === organization.id"
-                (click)="onCheckboxClick($event, organization.id)"
               />
               <span class="min-w-0 flex-1">
                 <span class="block truncate font-medium text-gray-900">{{ organization.name }}</span>
@@ -38,7 +38,7 @@ import { AuthStore } from '../auth.store';
                   <span class="block text-gray-400">Uitgeschakeld</span>
                 }
               </span>
-            </label>
+              </div>
           </li>
         } @empty {
           <li class="px-3 py-4 text-center text-gray-500">Geen organisaties beschikbaar.</li>
