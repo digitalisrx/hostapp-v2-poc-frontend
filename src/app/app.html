@@ -1,12 +1,15 @@
 @if (!isLoginPage()) {
   @if (authStore.user(); as user) {
     <header class="flex h-12 w-full shrink-0 items-center border-b border-gray-200 bg-white pl-3 pr-2">
-      <span class="header-text"> Digitalis </span>
+      <div class="flex items-center gap-1.5">
+        <span class="header-text"> Hostapp </span>
+        <svg lucideHatGlasses [size]="19"></svg>
+      </div>
 
       <div class="ml-auto flex items-center gap-2">
         <button
           type="button"
-          class="flex size-8 items-center justify-center rounded-lg p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+          class="flex size-9 items-center justify-center rounded-lg p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
           aria-label="Debug"
           (click)="debugModalOpen.set(true)"
         >
@@ -15,7 +18,7 @@
         <div class="relative">
           <button
             type="button"
-            class="flex size-8 items-center justify-center rounded-lg bg-blue-600 text-sm font-semibold text-white hover:bg-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+            class="flex size-9 items-center justify-center rounded-lg bg-blue-600 text-sm font-semibold text-white hover:bg-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
             [attr.aria-expanded]="accountMenuOpen()"
             aria-haspopup="true"
             [attr.aria-label]="'Account: ' + (user.email ?? user.userId)"

@@ -18,7 +18,7 @@ import { PatientStore } from '../patient.store';
         <span class="min-w-0 flex-1 text-xs">
           @if (selectedPatient(); as patient) {
             <span class="block truncate text-gray-900 font-medium text-sm">{{ patient.name }}</span>
-            <span class="block text-gray-500">{{ patient.gender }} &middot; {{ formatAge(patient.dob) }}</span>
+            <span class="block text-gray-500">{{ patient.gender }} &middot; {{ formatAge(patient) }}</span>
           } @else {
             <span class="text-gray-500">Patiënt selecteren</span>
           }

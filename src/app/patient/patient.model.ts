@@ -4,39 +4,27 @@ export interface Patient {
   id: string;
   name: string;
   gender: PatientGender;
-  dob: string;
+  /** Stored directly rather than derived from a birth date, so patients don't visibly age as real time passes — this is a testing environment. */
+  ageYears: number;
+  ageMonths: number;
 }
 
-export function calculateAge(dob: string, today = new Date()): number {
-  const birthDate = new Date(dob);
-  let age = today.getFullYear() - birthDate.getFullYear();
-
-  const hasHadBirthdayThisYear =
-    today.getMonth() > birthDate.getMonth() ||
-    (today.getMonth() === birthDate.getMonth() && today.getDate() >= birthDate.getDate());
-
-  if (!hasHadBirthdayThisYear) {
-    age--;
-  }
-
-  return age;
-}
-
-// Children under 10 are shown as years+months (e.g. "3j+7m"), the Dutch
+// Children under 10 are shown as years+months (e.g. "3j 7m"), the Dutch
 // clinical convention where age precision matters more at that stage.
-export function formatAge(dob: string, today = new Date()): string {
-  const years = calculateAge(dob, today);
+export function formatAge(patient: Pick<Patient, 'ageYears' | 'ageMonths'>): string {
+  return `${patient.ageYears}j ${patient.ageMonths}m`;
+}
 
-  if (years >= 10) {
-    return `${years}j`;
+/** Approximates a date of birth from a stored age, for integrations (e.g. Prescriptor) that require a real one. */
+export function estimateDob(patient: Pick<Patient, 'ageYears' | 'ageMonths'>, today = new Date()): string {
+  const totalMonths = patient.ageYears * 12 + patient.ageMonths;
+  let year = today.getFullYear() - Math.floor(totalMonths / 12);
+  let month = today.getMonth() + 1 - (totalMonths % 12);
+
+  if (month <= 0) {
+    month += 12;
+    year -= 1;
   }
 
-  const birthDate = new Date(dob);
-  let totalMonths = (today.getFullYear() - birthDate.getFullYear()) * 12 + (today.getMonth() - birthDate.getMonth());
-  if (today.getDate() < birthDate.getDate()) {
-    totalMonths--;
-  }
-  const remainingMonths = Math.max(totalMonths - years * 12, 0);
-
-  return `${years}j ${remainingMonths}m`;
+  return `${year}-${String(month).padStart(2, '0')}-01`;
 }

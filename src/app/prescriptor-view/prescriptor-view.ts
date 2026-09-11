@@ -7,7 +7,7 @@ import { SettingsStore } from '../settings/settings.store';
   selector: 'app-prescriptor-view',
   host: { class: 'flex h-full min-w-0 flex-1' },
   template: `
-    <div class="flex h-full w-full flex-col overflow-hidden bg-gray-50">
+    <div class="flex h-full w-full flex-col overflow-hidden bg-gradient-to-br from-gray-50 to-gray-200">
       @if (errorMessage(); as error) {
         <div class="m-3 rounded-lg border border-red-300 bg-red-50 p-3 text-sm text-red-800" role="alert">
           <p class="font-semibold">Prescriptor kan niet worden geladen</p>

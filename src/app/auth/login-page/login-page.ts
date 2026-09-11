@@ -1,7 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormField, email, form, required } from '@angular/forms/signals';
 import { Router } from '@angular/router';
-import { LucideUser } from '@lucide/angular';
+import { LucideUser, LucideHatGlasses } from '@lucide/angular';
 import { AuthStore } from '../auth.store';
 
 interface LoginModel {
@@ -11,16 +11,14 @@ interface LoginModel {
 
 @Component({
   selector: 'app-login-page',
-  imports: [FormField, LucideUser],
+  imports: [FormField, LucideUser, LucideHatGlasses],
   template: `
-    <div class="flex h-screen w-full items-center justify-center bg-gradient-to-br from-blue-50 to-blue-200 p-4">
+    <div class="flex h-screen w-full items-center justify-center bg-gradient-to-br from-gray-50 to-gray-200 p-4">
       <div class="w-full max-w-sm rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-        <div class="mb-4 flex flex-col items-center gap-2 text-center">
-          <span class="flex size-10 items-center justify-center rounded-lg bg-blue-600 text-white">
-            <svg lucideUser [size]="20"></svg>
-          </span>
-          <span class="header-text !text-2xl">Inloggen</span>
-        </div>
+      <div class="flex justify-center items-center gap-1.5 mb-5">
+        <span class="header-text !text-2xl"> Hostapp </span>
+        <svg lucideHatGlasses [size]="25"></svg>
+      </div>
 
         <form class="flex flex-col gap-3" (submit)="onSubmit($event)">
           <label>

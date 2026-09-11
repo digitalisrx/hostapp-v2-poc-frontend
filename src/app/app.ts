@@ -3,7 +3,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { SafeResourceUrl } from '@angular/platform-browser';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { filter, map, startWith } from 'rxjs';
-import { LucideBug, LucideBuilding2, LucideLogOut, LucideSettings, LucideTarget } from '@lucide/angular';
+import { LucideBug, LucideBuilding2, LucideHatGlasses, LucideLogOut, LucideSettings, LucideTarget } from '@lucide/angular';
 import { AuthStore, AuthUser } from './auth/auth.store';
 import { OrganizationModal } from './auth/organization-modal/organization-modal';
 import { DebugModal } from './debug/debug-modal/debug-modal';
@@ -24,6 +24,7 @@ import { TargetsModal } from './targets/targets-modal/targets-modal';
     TargetsModal,
     LucideBug,
     LucideBuilding2,
+    LucideHatGlasses,
     LucideLogOut,
     LucideSettings,
     LucideTarget,

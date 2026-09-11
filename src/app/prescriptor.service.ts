@@ -12,6 +12,7 @@ import { LabDataStore } from './lab/lab-data.store';
 import { LabDatum } from './lab/lab-datum.model';
 import { MedicationStore } from './medication/medication.store';
 import { Medication } from './medication/medication.model';
+import { estimateDob } from './patient/patient.model';
 import { PatientStore } from './patient/patient.store';
 
 interface PrescriptorCode {
@@ -207,7 +208,8 @@ export class PrescriptorService {
       ...(prescription ? { prescription } : {}),
       patient: {
         gender: patient.gender,
-        dob: patient.dob,
+        // Prescriptor expects a real date of birth; our own patients only track a stored age, so approximate one.
+        dob: estimateDob(patient),
         allergies,
         contraIndications,
         medications,

@@ -69,7 +69,7 @@ function clamp(value: number, min: number, max: number): number {
         }
         <button
           type="button"
-          class="flex justify-center items-center size-8 ml-auto rounded-lg p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+          class="flex justify-center items-center size-9 ml-auto rounded-lg p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
           [attr.aria-expanded]="!collapsed()"
           [attr.aria-label]="collapsed() ? 'Zijbalk uitklappen' : 'Zijbalk inklappen'"
           (click)="toggleCollapsed()"

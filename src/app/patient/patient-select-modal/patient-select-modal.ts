@@ -12,7 +12,7 @@ import {
 } from '@lucide/angular';
 import { Modal } from '../../shared/modal/modal';
 import { PatientEditModal } from '../patient-edit-modal/patient-edit-modal';
-import { Patient } from '../patient.model';
+import { formatAge, Patient } from '../patient.model';
 import { PatientStore } from '../patient.store';
 
 @Component({
@@ -101,7 +101,7 @@ import { PatientStore } from '../patient.store';
               <th class="w-8 px-3 py-2"><span class="sr-only">Herordenen</span></th>
               <th class="px-3 py-2">Naam</th>
               <th class="px-3 py-2">Geslacht</th>
-              <th class="px-3 py-2">Geboortedatum</th>
+              <th class="px-3 py-2">Leeftijd</th>
               <th class="w-24 px-3 py-2"><span class="sr-only">Acties</span></th>
             </tr>
           </thead>
@@ -139,7 +139,7 @@ import { PatientStore } from '../patient.store';
                 </td>
                 <td class="px-3 py-2 font-medium text-gray-900">{{ patient.name }}</td>
                 <td class="px-3 py-2">{{ patient.gender }}</td>
-                <td class="px-3 py-2 tabular-nums">{{ patient.dob }}</td>
+                <td class="px-3 py-2 tabular-nums">{{ formatAge(patient) }}</td>
                 <td class="px-3 py-2">
                   <div class="flex items-center justify-end gap-1">
                     <button
@@ -191,6 +191,7 @@ import { PatientStore } from '../patient.store';
 })
 export class PatientSelectModal {
   protected readonly patientStore = inject(PatientStore);
+  protected readonly formatAge = formatAge;
 
   open = input.required<boolean>();
   close = output<void>();

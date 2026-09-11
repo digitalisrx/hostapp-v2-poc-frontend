@@ -9,12 +9,13 @@ interface PatientDto {
   id: string;
   name: string;
   gender: PatientGender;
-  date_of_birth: string;
+  age_years: number;
+  age_months: number;
   sort_order: number;
 }
 
 function toPatient(dto: PatientDto): Patient {
-  return { id: dto.id, name: dto.name, gender: dto.gender, dob: dto.date_of_birth };
+  return { id: dto.id, name: dto.name, gender: dto.gender, ageYears: dto.age_years, ageMonths: dto.age_months };
 }
 
 @Service()
@@ -31,7 +32,8 @@ export class PatientApiService {
       this.http.post<{ patient: PatientDto }>(PATIENTS_URL, {
         name: data.name,
         gender: data.gender,
-        dateOfBirth: data.dob,
+        ageYears: data.ageYears,
+        ageMonths: data.ageMonths,
         sortOrder,
       }),
     );
@@ -43,7 +45,8 @@ export class PatientApiService {
       this.http.patch<{ patient: PatientDto }>(`${PATIENTS_URL}/${id}`, {
         ...(updates.name !== undefined ? { name: updates.name } : {}),
         ...(updates.gender !== undefined ? { gender: updates.gender } : {}),
-        ...(updates.dob !== undefined ? { dateOfBirth: updates.dob } : {}),
+        ...(updates.ageYears !== undefined ? { ageYears: updates.ageYears } : {}),
+        ...(updates.ageMonths !== undefined ? { ageMonths: updates.ageMonths } : {}),
       }),
     );
     return toPatient(response.patient);

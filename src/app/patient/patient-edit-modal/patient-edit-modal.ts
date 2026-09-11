@@ -1,5 +1,5 @@
 import { Component, effect, inject, input, output, signal } from '@angular/core';
-import { FormField, form, required } from '@angular/forms/signals';
+import { FormField, form, max, min, required } from '@angular/forms/signals';
 import { LucideUserPen, LucideUserPlus } from '@lucide/angular';
 import { Modal } from '../../shared/modal/modal';
 import { Patient, PatientGender } from '../patient.model';
@@ -8,7 +8,8 @@ import { PatientStore } from '../patient.store';
 interface PatientEditModel {
   name: string;
   gender: PatientGender;
-  dob: string;
+  ageYears: number;
+  ageMonths: number;
 }
 
 @Component({
@@ -50,14 +51,30 @@ interface PatientEditModel {
         </label>
 
         <label>
-          Geboortedatum
-          <input
-            type="date"
-            class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
-            [formField]="editForm.dob"
-          />
-          @if (editForm.dob().touched() && editForm.dob().invalid()) {
-            @for (error of editForm.dob().errors(); track error) {
+          Leeftijd <span class="text-gray-500 font-normal ml-0.5">(jaar/maand)</span>
+          <div class="flex items-center gap-2">
+            <input
+              type="number"
+              step="1"
+              aria-label="Leeftijd in jaren"
+              class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+              [formField]="editForm.ageYears"
+            />
+            <input
+              type="number"
+              step="1"
+              aria-label="Leeftijd in maanden"
+              class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+              [formField]="editForm.ageMonths"
+            />
+          </div>
+          @if (editForm.ageYears().touched() && editForm.ageYears().invalid()) {
+            @for (error of editForm.ageYears().errors(); track error) {
+              <span class="mt-1 block text-xs text-red-600">{{ error.message }}</span>
+            }
+          }
+          @if (editForm.ageMonths().touched() && editForm.ageMonths().invalid()) {
+            @for (error of editForm.ageMonths().errors(); track error) {
               <span class="mt-1 block text-xs text-red-600">{{ error.message }}</span>
             }
           }
@@ -96,10 +113,13 @@ export class PatientEditModal {
   patient = input<Patient | null>(null);
   close = output<void>();
 
-  protected readonly editModel = signal<PatientEditModel>({ name: '', gender: 'F', dob: '' });
+  protected readonly editModel = signal<PatientEditModel>({ name: '', gender: 'F', ageYears: 0, ageMonths: 0 });
   protected readonly editForm = form(this.editModel, (schemaPath) => {
     required(schemaPath.name, { message: 'Naam is verplicht' });
-    required(schemaPath.dob, { message: 'Geboortedatum is verplicht' });
+    min(schemaPath.ageYears, 0, { message: 'Leeftijd mag niet negatief zijn' });
+    max(schemaPath.ageYears, 150, { message: 'Leeftijd lijkt niet te kloppen' });
+    min(schemaPath.ageMonths, 0, { message: 'Maanden mag niet negatief zijn' });
+    max(schemaPath.ageMonths, 11, { message: 'Maanden moet tussen 0 en 11 zijn' });
   });
   protected readonly submitting = signal(false);
   protected readonly submitError = signal<string | null>(null);
@@ -113,8 +133,8 @@ export class PatientEditModal {
       const patient = this.patient();
       this.editModel.set(
         patient
-          ? { name: patient.name, gender: patient.gender, dob: patient.dob }
-          : { name: '', gender: 'F', dob: '' },
+          ? { name: patient.name, gender: patient.gender, ageYears: patient.ageYears, ageMonths: patient.ageMonths }
+          : { name: '', gender: 'F', ageYears: 0, ageMonths: 0 },
       );
       this.submitError.set(null);
     });
