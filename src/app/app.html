@@ -90,11 +90,15 @@
         (runSession)="runSession($event.type, $event.icpc, $event.prescription, $event.editingMedicationId)"
         (modeChange)="lastSessionType.set($event)"
       />
-      <app-prescriptor-view
-        [iframeUrl]="iframeUrl()"
-        [errorMessage]="errorMessage()"
-        [sessionType]="lastSessionType()"
-      />
+      @if (settingsStore.splitScreenMode()) {
+        <app-split-screen-view [panes]="splitScreenPanes()" />
+      } @else {
+        <app-prescriptor-view
+          [iframeUrl]="iframeUrl()"
+          [errorMessage]="errorMessage()"
+          [sessionType]="lastSessionType()"
+        />
+      }
     </main>
 
     <app-debug-modal [open]="debugModalOpen()" (close)="debugModalOpen.set(false)" />

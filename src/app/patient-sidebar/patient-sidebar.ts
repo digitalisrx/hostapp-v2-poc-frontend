@@ -3,6 +3,7 @@ import { Component, computed, effect, inject, input, output, signal } from '@ang
 import {
   LucideCheck,
   LucideChevronUp,
+  LucideGripVertical,
   LucideList,
   LucidePanelLeftClose,
   LucidePanelLeftOpen,
@@ -44,6 +45,7 @@ function clamp(value: number, min: number, max: number): number {
     LucidePlay,
     LucideRotateCw,
     LucideChevronUp,
+    LucideGripVertical,
     AdviceField,
     AllergyField,
     GstandaardContraindicationField,
@@ -57,8 +59,10 @@ function clamp(value: number, min: number, max: number): number {
   host: { class: 'flex h-full', '(document:click)': 'closeModeMenu()' },
   template: `
     <aside
-      class="relative flex h-full flex-col border-r border-gray-200 bg-white"
+      class="relative flex h-full flex-col bg-white"
       [class.overflow-hidden]="collapsed()"
+      [class.border-r]="collapsed()"
+      [class.border-gray-200]="collapsed()"
       [style.width.px]="collapsed() ? COLLAPSED_WIDTH : width()"
     >
       <div
@@ -204,23 +208,6 @@ function clamp(value: number, min: number, max: number): number {
             </div>
           }
         </div>
-
-        <div
-          [class]="handleClass()"
-          style="cursor: col-resize"
-          role="separator"
-          aria-orientation="vertical"
-          aria-label="Grootte van zijbalk wijzigen"
-          [attr.aria-valuenow]="width()"
-          [attr.aria-valuemin]="MIN_WIDTH"
-          [attr.aria-valuemax]="MAX_WIDTH"
-          tabindex="0"
-          (pointerdown)="onResizeStart($event)"
-          (pointermove)="onResizeMove($event)"
-          (pointerup)="onResizeEnd($event)"
-          (pointercancel)="onResizeEnd($event)"
-          (keydown)="onResizeKeydown($event)"
-        ></div>
       } @else {
         <div class="border-t border-gray-200 p-2">
           <button
@@ -245,6 +232,27 @@ function clamp(value: number, min: number, max: number): number {
         (select)="onIcpcSelected($event)"
       />
     </aside>
+
+    @if (!collapsed()) {
+      <div
+        class="flex h-full w-[11px] shrink-0 touch-none items-center justify-center bg-gray-100 select-none"
+        style="cursor: col-resize"
+        role="separator"
+        aria-orientation="vertical"
+        aria-label="Grootte van zijbalk wijzigen"
+        [attr.aria-valuenow]="width()"
+        [attr.aria-valuemin]="MIN_WIDTH"
+        [attr.aria-valuemax]="MAX_WIDTH"
+        tabindex="0"
+        (pointerdown)="onResizeStart($event)"
+        (pointermove)="onResizeMove($event)"
+        (pointerup)="onResizeEnd($event)"
+        (pointercancel)="onResizeEnd($event)"
+        (keydown)="onResizeKeydown($event)"
+      >
+        <svg lucideGripVertical [size]="16" class="shrink-0 text-muted"></svg>
+      </div>
+    }
   `,
 })
 export class PatientSidebar {
@@ -260,12 +268,6 @@ export class PatientSidebar {
   protected readonly collapsed = signal(false);
   protected readonly width = signal(this.loadStoredWidth());
   protected readonly resizing = signal(false);
-  protected readonly handleClass = computed(
-    () =>
-      `absolute top-0 right-[-4px] h-full w-2 touch-none rounded-sm ${
-        this.resizing() ? 'bg-primary-hover/15' : 'hover:bg-primary-hover/15'
-      }`,
-  );
 
   activeSessionType = input<PrescriptorSessionType | null>(null);
   runSession = output<{

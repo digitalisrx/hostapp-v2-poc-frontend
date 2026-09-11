@@ -19,13 +19,17 @@ import { PatientSidebar } from './patient-sidebar/patient-sidebar';
 import { PrescriptorPrescription, PrescriptorService, PrescriptorSessionType } from './prescriptor.service';
 import { PrescriptorView } from './prescriptor-view/prescriptor-view';
 import { SettingsModal } from './settings/settings-modal/settings-modal';
+import { SettingsStore } from './settings/settings.store';
+import { SplitScreenPane, SplitScreenView } from './split-screen-view/split-screen-view';
 import { TargetsModal } from './targets/targets-modal/targets-modal';
+import { TargetStore } from './targets/target.store';
 
 @Component({
   imports: [
     RouterOutlet,
     PatientSidebar,
     PrescriptorView,
+    SplitScreenView,
     DebugModal,
     OrganizationModal,
     SettingsModal,
@@ -47,6 +51,8 @@ export class App {
   private prescriptorService = inject(PrescriptorService);
   private readonly router = inject(Router);
   protected readonly authStore = inject(AuthStore);
+  protected readonly settingsStore = inject(SettingsStore);
+  private readonly targetStore = inject(TargetStore);
 
   protected readonly title = signal('hostapp-new');
   protected readonly iframeUrl = signal<SafeResourceUrl | null>(null);
@@ -55,6 +61,20 @@ export class App {
   /** Unlike activeSessionType, this isn't reset on failure — it's what the error message/iframe title label off of. */
   protected readonly lastSessionType = signal<PrescriptorSessionType | null>(null);
   protected readonly errorMessage = signal<string | null>(null);
+  /** Keyed by target id — filled in as split-screen sessions are run via the sidebar's run button. */
+  private readonly splitScreenResults = signal<Map<string, { iframeUrl: SafeResourceUrl | null; errorMessage: string | null }>>(
+    new Map(),
+  );
+  protected readonly splitScreenPanes = computed<SplitScreenPane[]>(() =>
+    this.targetStore
+      .targets()
+      .slice(0, 2)
+      .map((target) => ({
+        target,
+        iframeUrl: this.splitScreenResults().get(target.id)?.iframeUrl ?? null,
+        errorMessage: this.splitScreenResults().get(target.id)?.errorMessage ?? null,
+      })),
+  );
 
   protected readonly debugModalOpen = signal(false);
   protected readonly settingsModalOpen = signal(false);
@@ -103,6 +123,11 @@ export class App {
     this.errorMessage.set(null);
     this.lastSessionType.set(type);
 
+    if (this.settingsStore.splitScreenMode()) {
+      await this.runSplitScreenSessions(type, icpc, prescription, editingMedicationId);
+      return;
+    }
+
     try {
       const session = await this.prescriptorService.createSession(type, icpc, prescription, editingMedicationId);
       this.iframeUrl.set(session.iframeUrl);
@@ -115,6 +140,38 @@ export class App {
       this.errorMessage.set(
         error instanceof Error ? error.message : 'Het starten van de Prescriptor-sessie is mislukt.',
       );
+    }
+  }
+
+  // Sequential on purpose: PrescriptorService tracks the "active" session as a few
+  // singular fields (see its handleMessage comment), so running these one at a time keeps
+  // that state from being overwritten mid-request by the other target's call.
+  private async runSplitScreenSessions(
+    type: PrescriptorSessionType,
+    icpc?: string,
+    prescription?: PrescriptorPrescription,
+    editingMedicationId?: string,
+  ) {
+    for (const target of this.targetStore.targets().slice(0, 2)) {
+      try {
+        const session = await this.prescriptorService.createSession(
+          type,
+          icpc,
+          prescription,
+          editingMedicationId,
+          target.id,
+        );
+        this.splitScreenResults.update((results) =>
+          new Map(results).set(target.id, { iframeUrl: session.iframeUrl, errorMessage: null }),
+        );
+      } catch (error) {
+        this.splitScreenResults.update((results) =>
+          new Map(results).set(target.id, {
+            iframeUrl: null,
+            errorMessage: error instanceof Error ? error.message : 'Het starten van de sessie is mislukt.',
+          }),
+        );
+      }
     }
   }
 

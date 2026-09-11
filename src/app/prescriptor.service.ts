@@ -176,6 +176,7 @@ export class PrescriptorService {
     icpc?: string,
     prescription?: PrescriptorPrescription,
     editingMedicationId?: string,
+    targetId?: string,
   ): Promise<PrescriptorSession> {
     const patient = this.patientStore.selectedPatient();
 
@@ -206,6 +207,7 @@ export class PrescriptorService {
     const body = {
       ...(type === 'formulary' ? { icpc } : {}),
       ...(prescription ? { prescription } : {}),
+      ...(targetId ? { targetId } : {}),
       patient: {
         gender: patient.gender,
         // Prescriptor expects a real date of birth; our own patients only track a stored age, so approximate one.
@@ -253,6 +255,13 @@ export class PrescriptorService {
     };
   }
 
+  // Known limitation: this only tracks a single "active" session (activeSessionId/
+  // activePatientId/activeEditingMedicationId below), so if split-screen mode has two
+  // sessions open at once, a SESSION_ENDED message from either iframe is attributed to
+  // whichever session was created most recently — there's no sessionId in the postMessage
+  // payload to route by. Fine for split-screen's current use as a side-by-side comparison
+  // view; would need per-session tracking (keyed by event.source) to safely capture
+  // medication/advice results from both panes independently.
   private handleMessage(event: MessageEvent) {
     if (event.origin !== BACKEND_ORIGIN) {
       return;
