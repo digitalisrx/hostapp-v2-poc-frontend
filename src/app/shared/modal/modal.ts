@@ -30,7 +30,7 @@ let nextModalId = 0;
               <span [id]="titleId" class="flex-1 header-text">{{ title() }}</span>
               <button
                 type="button"
-                class="flex justify-center items-center size-8 rounded-lg text-gray-500 hover:bg-gray-100 hover:text-gray-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+                class="flex justify-center items-center size-8 rounded-lg text-muted hover:bg-gray-100 hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
                 aria-label="Dialoogvenster sluiten"
                 (click)="close.emit()"
               >

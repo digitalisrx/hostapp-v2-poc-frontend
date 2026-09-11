@@ -54,14 +54,14 @@ import { PatientStore } from '../patient.store';
               type="search"
               autofocus
               placeholder="Patiënten zoeken"
-              class="w-full rounded-lg border border-gray-300 py-2 pr-8 pl-8 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+              class="w-full rounded-lg border border-gray-300 py-2 pr-8 pl-8 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
               [value]="searchTerm()"
               (input)="onSearchInput($event)"
             />
             @if (searchTerm()) {
               <button
                 type="button"
-                class="absolute top-1/2 right-2 flex size-6 -translate-y-1/2 items-center justify-center rounded-lg text-gray-400 hover:bg-red-50 hover:text-red-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+                class="absolute top-1/2 right-2 flex size-6 -translate-y-1/2 items-center justify-center rounded-lg text-gray-400 hover:bg-red-50 hover:text-red-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
                 aria-label="Zoekopdracht wissen"
                 (click)="clearSearch()"
               >
@@ -86,7 +86,7 @@ import { PatientStore } from '../patient.store';
           <span>{{ error }}</span>
           <button
             type="button"
-            class="rounded-lg border border-red-300 px-2 py-1 text-xs font-medium hover:bg-red-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+            class="rounded-lg border border-red-300 px-2 py-1 text-xs font-medium hover:bg-red-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
             (click)="patientStore.loadPatients()"
           >
             Opnieuw proberen
@@ -96,7 +96,7 @@ import { PatientStore } from '../patient.store';
 
       <div class="max-h-72 overflow-y-auto rounded-lg border border-gray-200">
         <table class="w-full text-left text-sm">
-          <thead class="tracking-wide border-b border-gray-200 text-gray-500">
+          <thead class="tracking-wide border-b border-gray-200 text-muted">
             <tr>
               <th class="w-8 px-3 py-2"><span class="sr-only">Herordenen</span></th>
               <th class="px-3 py-2">Naam</th>
@@ -113,7 +113,7 @@ import { PatientStore } from '../patient.store';
           >
             @if (patientStore.loading()) {
               <tr>
-                <td colspan="5" class="px-3 py-6 text-center text-gray-500">Patiënten laden…</td>
+                <td colspan="5" class="px-3 py-6 text-center text-muted">Patiënten laden…</td>
               </tr>
             } @else {
             @for (patient of filteredPatients(); track patient.id) {
@@ -137,14 +137,14 @@ import { PatientStore } from '../patient.store';
                     [attr.aria-label]="patient.name + ' herordenen'"
                   ></svg>
                 </td>
-                <td class="px-3 py-2 font-medium text-gray-900">{{ patient.name }}</td>
+                <td class="px-3 py-2 font-medium text-foreground">{{ patient.name }}</td>
                 <td class="px-3 py-2">{{ patient.gender }}</td>
                 <td class="px-3 py-2 tabular-nums">{{ formatAge(patient) }}</td>
                 <td class="px-3 py-2">
                   <div class="flex items-center justify-end gap-1">
                     <button
                       type="button"
-                      class="rounded-lg p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+                      class="rounded-lg p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
                       [attr.aria-label]="patient.name + ' bewerken'"
                       (click)="editOne(patient, $event)"
                     >
@@ -152,7 +152,7 @@ import { PatientStore } from '../patient.store';
                     </button>
                     <button
                       type="button"
-                      class="rounded-lg p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+                      class="rounded-lg p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
                       [attr.aria-label]="patient.name + ' dupliceren'"
                       (click)="duplicateOne(patient.id, $event)"
                     >
@@ -160,7 +160,7 @@ import { PatientStore } from '../patient.store';
                     </button>
                     <button
                       type="button"
-                      class="rounded-lg p-1 text-gray-400 hover:bg-red-50 hover:text-red-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+                      class="rounded-lg p-1 text-gray-400 hover:bg-red-50 hover:text-red-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
                       [attr.aria-label]="patient.name + ' verwijderen'"
                       (click)="deleteOne(patient.id, $event)"
                     >
@@ -171,7 +171,7 @@ import { PatientStore } from '../patient.store';
               </tr>
             } @empty {
               <tr>
-                <td colspan="5" class="px-3 py-6 text-center text-gray-500">
+                <td colspan="5" class="px-3 py-6 text-center text-muted">
                   {{ isSearching() ? 'Geen patiënten gevonden voor uw zoekopdracht.' : 'Geen patiënten beschikbaar.' }}
                 </td>
               </tr>

@@ -19,10 +19,10 @@ type ViewMode = 'list' | 'json';
             type="button"
             role="tab"
             [attr.aria-selected]="viewMode() === 'list'"
-            class="rounded-lg px-2.5 py-1 font-medium text-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+            class="rounded-lg px-2.5 py-1 font-medium text-muted focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
             [class.bg-white]="viewMode() === 'list'"
             [class.shadow-sm]="viewMode() === 'list'"
-            [class.text-gray-900]="viewMode() === 'list'"
+            [class.text-foreground]="viewMode() === 'list'"
             (click)="viewMode.set('list')"
           >
             Lijst
@@ -31,10 +31,10 @@ type ViewMode = 'list' | 'json';
             type="button"
             role="tab"
             [attr.aria-selected]="viewMode() === 'json'"
-            class="rounded-lg px-2.5 py-1 font-medium text-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+            class="rounded-lg px-2.5 py-1 font-medium text-muted focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
             [class.bg-white]="viewMode() === 'json'"
             [class.shadow-sm]="viewMode() === 'json'"
-            [class.text-gray-900]="viewMode() === 'json'"
+            [class.text-foreground]="viewMode() === 'json'"
             (click)="viewMode.set('json')"
           >
             JSON
@@ -47,10 +47,10 @@ type ViewMode = 'list' | 'json';
               <li
                 [id]="'medication-detail-' + drug.id"
                 class="scroll-mt-2 rounded-l-sm border-l-4 border-l-gray-200 my-6 pl-3 first:mt-0 last:mb-0"
-                [class.!border-l-blue-600]="drug.id === focusId()"
+                [class.!border-l-primary]="drug.id === focusId()"
               >
                 <div class="flex items-center gap-2">
-                  <span class="min-w-0 truncate text-sm font-medium text-gray-900">{{ drug.description }}</span>
+                  <span class="min-w-0 truncate text-sm font-medium text-foreground">{{ drug.description }}</span>
                   @if (drug.opium) {
                     <span class="shrink-0 rounded-lg bg-red-50 px-2 py-0.5 text-xs text-red-600">Opium</span>
                   }
@@ -90,7 +90,7 @@ type ViewMode = 'list' | 'json';
           <pre>{{ stringify(medications()) }}</pre>
         }
       } @else {
-        <p class="px-1 py-4 text-center text-sm text-gray-500">Nog geen medicatie</p>
+        <p class="px-1 py-4 text-center text-sm text-muted">Nog geen medicatie</p>
       }
     </app-modal>
   `,

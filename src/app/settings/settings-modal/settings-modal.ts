@@ -13,13 +13,13 @@ import { SettingsStore } from '../settings.store';
       <label class="flex items-start align gap-3 text-sm">
         <input
           type="checkbox"
-          class="mt-3 size-4 shrink-0 rounded-lg border-gray-300 text-blue-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+          class="mt-3 size-4 shrink-0 rounded-lg border-gray-300 accent-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
           [checked]="settingsStore.demoMode()"
           (change)="onDemoModeChange($event)"
         />
         <span>
-          <span class="block font-medium text-gray-900">Demomodus</span>
-          <span class="block font-normal text-gray-500">
+          <span class="block font-medium text-foreground">Demomodus</span>
+          <span class="block font-normal text-muted">
             Toont een opvallende rand rond de Prescriptor-iframe, zodat direct duidelijk is welke applicatie
             wordt getoond.
           </span>

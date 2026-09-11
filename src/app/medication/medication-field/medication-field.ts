@@ -16,7 +16,7 @@ import { MedicationStore } from '../medication.store';
         <span>{{ error }}</span>
         <button
           type="button"
-          class="rounded-lg border border-red-300 px-2 py-0.5 text-xs font-medium hover:bg-red-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+          class="rounded-lg border border-red-300 px-2 py-0.5 text-xs font-medium hover:bg-red-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
           (click)="store.reload()"
         >
           Opnieuw proberen
@@ -30,12 +30,12 @@ import { MedicationStore } from '../medication.store';
     }
     <div class="overflow-hidden rounded-lg border border-gray-300">
       @if (store.loading()) {
-        <p class="px-3 py-2.5 text-xs text-gray-500">medicatie laden…</p>
+        <p class="px-3 py-2.5 text-xs text-muted">medicatie laden…</p>
       } @else if (medications().length) {
         <div class="divide-y divide-gray-100 text-xs">
           @for (drug of medications(); track drug.id) {
             <div
-              class="group flex cursor-pointer items-start gap-2 pl-3 p-1.5 hover:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600 focus-visible:-outline-offset-2"
+              class="group flex cursor-pointer items-start gap-2 pl-3 p-1.5 hover:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:-outline-offset-2"
               role="button"
               tabindex="0"
               [attr.aria-label]="drug.description + ' bewerken in CreateRx'"
@@ -45,14 +45,14 @@ import { MedicationStore } from '../medication.store';
             >
               <div class="min-w-0 flex-1 flex flex-col gap-1">
                 <div class="flex items-center gap-2">
-                  <span class="min-w-0 truncate font-medium text-gray-900">{{ drug.description }}</span>
+                  <span class="min-w-0 truncate font-medium text-foreground">{{ drug.description }}</span>
                   @if (drug.opium) {
                     <span class="rounded-lg bg-red-50 px-2 py-0.5 text-xs text-red-600">
                       Opium
                     </span>
                   }
                 </div>
-                <p class="text-xs text-gray-500">
+                <p class="text-xs text-muted">
                   @if (quantityFor(drug); as quantity) {
                     {{ quantity.value }} {{ quantity.unit }} &middot;
                   }
@@ -67,7 +67,7 @@ import { MedicationStore } from '../medication.store';
           }
         </div>
       } @else {
-        <p class="px-3 py-2.5 text-xs text-gray-500">Nog geen medicatie</p>
+        <p class="px-3 py-2.5 text-xs text-muted">Nog geen medicatie</p>
       }
     </div>
 

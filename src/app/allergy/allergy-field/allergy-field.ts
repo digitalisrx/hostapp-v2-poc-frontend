@@ -16,7 +16,7 @@ import { AllergyStore } from '../allergy.store';
         <span>{{ error }}</span>
         <button
           type="button"
-          class="rounded-lg border border-red-300 px-2 py-0.5 text-xs font-medium hover:bg-red-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+          class="rounded-lg border border-red-300 px-2 py-0.5 text-xs font-medium hover:bg-red-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
           (click)="store.reload()"
         >
           Opnieuw proberen
@@ -30,9 +30,9 @@ import { AllergyStore } from '../allergy.store';
     }
     <div class="overflow-hidden rounded-lg border border-gray-300">
       @if (store.loading()) {
-        <p class="px-3 py-2.5 text-left text-xs text-gray-500">allergieën laden…</p>
+        <p class="px-3 py-2.5 text-left text-xs text-muted">allergieën laden…</p>
       } @else if (!allergies().length) {
-        <p class="px-3 py-2.5 text-left text-xs text-gray-500">Nog geen allergieën</p>
+        <p class="px-3 py-2.5 text-left text-xs text-muted">Nog geen allergieën</p>
       } @else {
         <table class="w-full table-fixed border-collapse text-xs">
           <tbody>
@@ -41,10 +41,10 @@ import { AllergyStore } from '../allergy.store';
                 <td class="w-full max-w-0 py-1.5 px-1.5">
                   <span class="flex items-center gap-1.5">
                     <app-allergy-code-chip [type]="item.type" />
-                    <span class="truncate font-medium text-gray-900">{{ item.description }}</span>
+                    <span class="truncate font-medium text-foreground">{{ item.description }}</span>
                   </span>
                 </td>
-                <td class="w-16 truncate py-1.5 pr-1.5 whitespace-nowrap text-gray-500 tabular-nums">{{ item.id }}</td>
+                <td class="w-16 truncate py-1.5 pr-1.5 whitespace-nowrap text-muted tabular-nums">{{ item.id }}</td>
                 <td class="w-8 py-1.5">
                   <app-delete-button
                     [ariaLabel]="item.description + ' verwijderen'"

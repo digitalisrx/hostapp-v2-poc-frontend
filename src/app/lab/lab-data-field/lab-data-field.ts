@@ -18,7 +18,7 @@ import { LabDatum } from '../lab-datum.model';
         <span>{{ error }}</span>
         <button
           type="button"
-          class="rounded-lg border border-red-300 px-2 py-0.5 text-xs font-medium hover:bg-red-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+          class="rounded-lg border border-red-300 px-2 py-0.5 text-xs font-medium hover:bg-red-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
           (click)="store.reload()"
         >
           Opnieuw proberen
@@ -32,9 +32,9 @@ import { LabDatum } from '../lab-datum.model';
     }
     <div class="overflow-hidden rounded-lg border border-gray-300">
       @if (store.loading()) {
-        <p class="px-3 py-2.5 text-left text-xs text-gray-500">laboratoriumgegevens laden…</p>
+        <p class="px-3 py-2.5 text-left text-xs text-muted">laboratoriumgegevens laden…</p>
       } @else if (!labData().length) {
-        <p class="px-3 py-2.5 text-left text-xs text-gray-500">Nog geen laboratoriumgegevens</p>
+        <p class="px-3 py-2.5 text-left text-xs text-muted">Nog geen laboratoriumgegevens</p>
       } @else {
         <ul class="divide-y divide-gray-100 text-xs">
           @for (item of labData(); track item.id) {
@@ -42,16 +42,16 @@ import { LabDatum } from '../lab-datum.model';
               class="group flex min-h-9 cursor-pointer items-center gap-1.5 py-1.5 pl-3 hover:bg-gray-50"
               (click)="editItem(item)"
             >
-              <span class="min-w-0 flex-1 truncate font-medium text-gray-900">
+              <span class="min-w-0 flex-1 truncate font-medium text-foreground">
                 {{ describe(item.labCodeId) }}
-                <span class="text-gray-500 font-normal">
+                <span class="text-muted font-normal">
                   @ {{ formatAmount(item.value) }}
                   @if (unitFor(item.labCodeId); as unit) {
                     {{ unit }}
                   }
                 </span>
               </span>
-              <span class="w-16 shrink-0 truncate pl-1.5 whitespace-nowrap text-gray-500 tabular-nums">
+              <span class="w-16 shrink-0 truncate pl-1.5 whitespace-nowrap text-muted tabular-nums">
                 {{ item.daysAgo }}d
               </span>
               <app-delete-button

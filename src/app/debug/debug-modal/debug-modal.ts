@@ -20,7 +20,7 @@ const COPIED_FEEDBACK_MS = 1500;
               <button
                 type="button"
                 [class]="
-                  'flex size-6 items-center justify-center rounded-lg text-gray-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600 ' +
+                  'flex size-6 items-center justify-center rounded-lg text-gray-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary ' +
                   (requestCopied() ? 'hover:bg-green-100 hover:text-green-700' : 'hover:bg-gray-200 hover:text-gray-700')
                 "
                 aria-label="Request kopiëren"
@@ -43,7 +43,7 @@ const COPIED_FEEDBACK_MS = 1500;
               <button
                 type="button"
                 [class]="
-                  'flex size-6 items-center justify-center rounded-lg text-gray-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600 ' +
+                  'flex size-6 items-center justify-center rounded-lg text-gray-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary ' +
                   (responseCopied() ? 'hover:bg-green-100 hover:text-green-700' : 'hover:bg-gray-200 hover:text-gray-700')
                 "
                 aria-label="Response kopiëren"

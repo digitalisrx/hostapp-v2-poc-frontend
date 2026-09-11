@@ -52,14 +52,14 @@ import { TargetStore } from '../target.store';
               type="search"
               autofocus
               placeholder="Targets zoeken"
-              class="w-full rounded-lg border border-gray-300 py-2 pr-8 pl-8 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+              class="w-full rounded-lg border border-gray-300 py-2 pr-8 pl-8 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
               [value]="searchTerm()"
               (input)="onSearchInput($event)"
             />
             @if (searchTerm()) {
               <button
                 type="button"
-                class="absolute top-1/2 right-2 flex size-6 -translate-y-1/2 items-center justify-center rounded-lg text-gray-400 hover:bg-red-50 hover:text-red-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+                class="absolute top-1/2 right-2 flex size-6 -translate-y-1/2 items-center justify-center rounded-lg text-gray-400 hover:bg-red-50 hover:text-red-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
                 aria-label="Zoekopdracht wissen"
                 (click)="clearSearch()"
               >
@@ -83,7 +83,7 @@ import { TargetStore } from '../target.store';
           <span>{{ error }}</span>
           <button
             type="button"
-            class="rounded-lg border border-red-300 px-2 py-1 text-xs font-medium hover:bg-red-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+            class="rounded-lg border border-red-300 px-2 py-1 text-xs font-medium hover:bg-red-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
             (click)="targetStore.loadTargets()"
           >
             Opnieuw proberen
@@ -93,7 +93,7 @@ import { TargetStore } from '../target.store';
 
       <div class="overflow-hidden rounded-lg border border-gray-200">
         <table class="w-full text-left text-sm">
-          <thead class="border-b border-gray-200 tracking-wide text-gray-500">
+          <thead class="border-b border-gray-200 tracking-wide text-muted">
             <tr>
               <th class="w-8 px-3 py-2"><span class="sr-only">Herordenen</span></th>
               <th class="w-6 py-2"><span class="sr-only">Actief</span></th>
@@ -110,7 +110,7 @@ import { TargetStore } from '../target.store';
           >
             @if (targetStore.loading()) {
               <tr>
-                <td colspan="5" class="px-3 py-6 text-center text-gray-500">Targets laden…</td>
+                <td colspan="5" class="px-3 py-6 text-center text-muted">Targets laden…</td>
               </tr>
             } @else {
             @for (target of filteredTargets(); track target.id) {
@@ -133,20 +133,20 @@ import { TargetStore } from '../target.store';
                   <div class="flex items-center justify-center">
                     <input
                       type="checkbox"
-                      class="size-4 rounded-lg border-gray-300 text-blue-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+                      class="size-4 rounded-lg border-gray-300 accent-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
                       [checked]="target.active"
                       [attr.aria-label]="target.label + ' actief'"
                       (click)="onActiveClick($event, target.id)"
                     />
                   </div>
                 </td>
-                <td class="pl-1.5 pr-3 py-2 text-gray-900">{{ target.label }}</td>
-                <td class="max-w-0 truncate px-3 py-2 text-gray-00">{{ target.url }}</td>
+                <td class="pl-1.5 pr-3 py-2 text-foreground">{{ target.label }}</td>
+                <td class="max-w-0 truncate px-3 py-2 text-muted">{{ target.url }}</td>
                 <td class="px-3 py-2">
                   <div class="flex items-center justify-end gap-1">
                     <button
                       type="button"
-                      class="rounded-lg p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+                      class="rounded-lg p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
                       [attr.aria-label]="target.label + ' bewerken'"
                       (click)="editingTarget.set(target)"
                     >
@@ -154,7 +154,7 @@ import { TargetStore } from '../target.store';
                     </button>
                     <button
                       type="button"
-                      class="rounded-lg p-1 text-gray-400 hover:bg-red-50 hover:text-red-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+                      class="rounded-lg p-1 text-gray-400 hover:bg-red-50 hover:text-red-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
                       [attr.aria-label]="target.label + ' verwijderen'"
                       (click)="targetStore.delete(target.id)"
                     >
@@ -165,7 +165,7 @@ import { TargetStore } from '../target.store';
               </tr>
             } @empty {
               <tr>
-                <td colspan="5" class="px-3 py-6 text-center text-gray-500">
+                <td colspan="5" class="px-3 py-6 text-center text-muted">
                   {{ isSearching() ? 'Geen targets gevonden voor uw zoekopdracht.' : 'Nog geen targets.' }}
                 </td>
               </tr>

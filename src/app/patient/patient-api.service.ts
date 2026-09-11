@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Service, inject } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { Patient, PatientGender } from './patient.model';
@@ -18,6 +18,13 @@ function toPatient(dto: PatientDto): Patient {
   return { id: dto.id, name: dto.name, gender: dto.gender, ageYears: dto.age_years, ageMonths: dto.age_months };
 }
 
+function toCreatePatientError(error: unknown): Error {
+  if (error instanceof HttpErrorResponse && error.error?.reason === 'no-organization-selected') {
+    return new Error('Selecteer eerst een organisatie voordat u een patiënt kunt aanmaken.');
+  }
+  return error instanceof Error ? error : new Error('Patiënt aanmaken mislukt.');
+}
+
 @Service()
 export class PatientApiService {
   private readonly http = inject(HttpClient);
@@ -28,16 +35,20 @@ export class PatientApiService {
   }
 
   async createPatient(data: Omit<Patient, 'id'>, sortOrder: number): Promise<Patient> {
-    const response = await firstValueFrom(
-      this.http.post<{ patient: PatientDto }>(PATIENTS_URL, {
-        name: data.name,
-        gender: data.gender,
-        ageYears: data.ageYears,
-        ageMonths: data.ageMonths,
-        sortOrder,
-      }),
-    );
-    return toPatient(response.patient);
+    try {
+      const response = await firstValueFrom(
+        this.http.post<{ patient: PatientDto }>(PATIENTS_URL, {
+          name: data.name,
+          gender: data.gender,
+          ageYears: data.ageYears,
+          ageMonths: data.ageMonths,
+          sortOrder,
+        }),
+      );
+      return toPatient(response.patient);
+    } catch (error) {
+      throw toCreatePatientError(error);
+    }
   }
 
   async updatePatient(id: string, updates: Partial<Omit<Patient, 'id'>>): Promise<Patient> {

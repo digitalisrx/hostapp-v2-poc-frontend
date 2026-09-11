@@ -14,7 +14,7 @@ import { AdviceStore } from '../advice.store';
         <span>{{ error }}</span>
         <button
           type="button"
-          class="rounded-lg border border-red-300 px-2 py-0.5 text-xs font-medium hover:bg-red-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+          class="rounded-lg border border-red-300 px-2 py-0.5 text-xs font-medium hover:bg-red-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
           (click)="store.reload()"
         >
           Opnieuw proberen
@@ -28,14 +28,14 @@ import { AdviceStore } from '../advice.store';
     }
     <div class="overflow-hidden rounded-lg border border-gray-300">
       @if (store.loading()) {
-        <p class="px-3 py-2.5 text-xs text-gray-500">adviezen laden…</p>
+        <p class="px-3 py-2.5 text-xs text-muted">adviezen laden…</p>
       } @else if (advices().length) {
         <div class="divide-y divide-gray-100 text-xs">
           @for (advice of advices(); track advice.id) {
             <div class="group flex items-center gap-2 py-1.5 pl-3">
-              <div class="min-w-0 flex-1 text-gray-700 text-ellipsis overflow-hidden whitespace-nowrap">
+              <div class="min-w-0 flex-1 text-foreground text-ellipsis overflow-hidden whitespace-nowrap">
                 @if (advice.contentType !== 'text/plain') {
-                  <a [href]="advice.text" target="_blank" rel="noopener" class="text-blue-600 hover:underline">
+                  <a [href]="advice.text" target="_blank" rel="noopener" class="text-primary hover:underline">
                     {{ advice.text }}
                   </a>
                 } @else {
@@ -47,7 +47,7 @@ import { AdviceStore } from '../advice.store';
           }
         </div>
       } @else {
-        <p class="px-3 py-2.5 text-xs text-gray-500">Nog geen adviezen</p>
+        <p class="px-3 py-2.5 text-xs text-muted">Nog geen adviezen</p>
       }
     </div>
   `,

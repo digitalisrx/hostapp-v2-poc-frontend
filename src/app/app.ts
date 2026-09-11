@@ -3,7 +3,15 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { SafeResourceUrl } from '@angular/platform-browser';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { filter, map, startWith } from 'rxjs';
-import { LucideBug, LucideBuilding2, LucideHatGlasses, LucideLogOut, LucideSettings, LucideTarget } from '@lucide/angular';
+import {
+  LucideBug,
+  LucideBuilding2,
+  LucideHatGlasses,
+  LucideLogOut,
+  LucideSettings,
+  LucideTarget,
+  LucideTriangleAlert,
+} from '@lucide/angular';
 import { AuthStore, AuthUser } from './auth/auth.store';
 import { OrganizationModal } from './auth/organization-modal/organization-modal';
 import { DebugModal } from './debug/debug-modal/debug-modal';
@@ -28,6 +36,7 @@ import { TargetsModal } from './targets/targets-modal/targets-modal';
     LucideLogOut,
     LucideSettings,
     LucideTarget,
+    LucideTriangleAlert,
   ],
   selector: 'app-root',
   host: { class: 'flex h-screen w-full flex-col overflow-hidden', '(document:click)': 'closeAccountMenu()' },
@@ -43,6 +52,8 @@ export class App {
   protected readonly iframeUrl = signal<SafeResourceUrl | null>(null);
   protected readonly sessionId = signal<string | null>(null);
   protected readonly activeSessionType = signal<PrescriptorSessionType | null>(null);
+  /** Unlike activeSessionType, this isn't reset on failure — it's what the error message/iframe title label off of. */
+  protected readonly lastSessionType = signal<PrescriptorSessionType | null>(null);
   protected readonly errorMessage = signal<string | null>(null);
 
   protected readonly debugModalOpen = signal(false);
@@ -60,6 +71,17 @@ export class App {
     { initialValue: this.router.url },
   );
   protected readonly isLoginPage = computed(() => this.currentUrl().startsWith('/login'));
+
+  protected readonly organizationWarning = computed(() => {
+    const user = this.authStore.user();
+    if (!user || !user.hasPrescriptorLicenseKey) {
+      return null;
+    }
+    if (!user.selectedOrganizationId) {
+      return 'Geen organisatie geselecteerd.';
+    }
+    return null;
+  });
 
   constructor() {
     effect(() => {
@@ -79,6 +101,7 @@ export class App {
     editingMedicationId?: string,
   ) {
     this.errorMessage.set(null);
+    this.lastSessionType.set(type);
 
     try {
       const session = await this.prescriptorService.createSession(type, icpc, prescription, editingMedicationId);

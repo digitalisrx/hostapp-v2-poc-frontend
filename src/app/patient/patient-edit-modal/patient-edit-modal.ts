@@ -29,7 +29,7 @@ interface PatientEditModel {
           <input
             type="text"
             autofocus
-            class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+            class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
             [formField]="editForm.name"
           />
           @if (editForm.name().touched() && editForm.name().invalid()) {
@@ -42,7 +42,7 @@ interface PatientEditModel {
         <label>
           Geslacht
           <select
-            class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+            class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
             [formField]="editForm.gender"
           >
             <option value="F">Vrouw</option>
@@ -51,20 +51,20 @@ interface PatientEditModel {
         </label>
 
         <label>
-          Leeftijd <span class="text-gray-500 font-normal ml-0.5">(jaar/maand)</span>
+          Leeftijd <span class="text-muted font-normal ml-0.5">(jaar/maand)</span>
           <div class="flex items-center gap-2">
             <input
               type="number"
               step="1"
               aria-label="Leeftijd in jaren"
-              class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+              class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
               [formField]="editForm.ageYears"
             />
             <input
               type="number"
               step="1"
               aria-label="Leeftijd in maanden"
-              class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+              class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
               [formField]="editForm.ageMonths"
             />
           </div>
@@ -89,7 +89,7 @@ interface PatientEditModel {
         <div class="mt-2 flex justify-end gap-2">
           <button
             type="button"
-            class="rounded-lg border border-gray-300 px-3 py-2 text-sm hover:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+            class="rounded-lg border border-gray-300 px-3 py-2 text-sm hover:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
             (click)="handleClose()"
           >
             Annuleren

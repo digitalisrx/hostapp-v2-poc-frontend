@@ -23,7 +23,7 @@ interface TargetEditModel {
           <input
             type="text"
             autofocus
-            class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+            class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
             [formField]="editForm.label"
           />
           @if (editForm.label().touched() && editForm.label().invalid()) {
@@ -38,7 +38,7 @@ interface TargetEditModel {
           <input
             type="url"
             placeholder="https://…"
-            class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+            class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
             [formField]="editForm.url"
           />
           @if (editForm.url().touched() && editForm.url().invalid()) {
@@ -57,7 +57,7 @@ interface TargetEditModel {
         <div class="mt-2 flex justify-end gap-2">
           <button
             type="button"
-            class="rounded-lg border border-gray-300 px-3 py-2 text-sm hover:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+            class="rounded-lg border border-gray-300 px-3 py-2 text-sm hover:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
             (click)="handleClose()"
           >
             Annuleren

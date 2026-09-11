@@ -8,7 +8,7 @@ interface AllergyCodeTypeInfo {
 
 const ALLERGY_CODE_TYPES: Record<number, AllergyCodeTypeInfo> = {
   1: { letter: 'G', label: 'Generiek', colorClass: 'bg-green-100/70 text-green-700' },
-  2: { letter: 'S', label: 'Stofnaam', colorClass: 'bg-blue-100/70 text-blue-700' },
+  2: { letter: 'S', label: 'Stofnaam', colorClass: 'bg-blue-100/70 text-primary-hover' },
   3: { letter: 'R', label: 'Toedieningsroute', colorClass: 'bg-fuchsia-100/70 text-fuchsia-700' },
 };
 

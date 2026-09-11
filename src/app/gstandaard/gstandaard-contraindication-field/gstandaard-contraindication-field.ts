@@ -15,7 +15,7 @@ import { GstandaardContraindicationStore } from '../gstandaard-contraindication.
         <span>{{ error }}</span>
         <button
           type="button"
-          class="rounded-lg border border-red-300 px-2 py-0.5 text-xs font-medium hover:bg-red-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+          class="rounded-lg border border-red-300 px-2 py-0.5 text-xs font-medium hover:bg-red-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
           (click)="store.reload()"
         >
           Opnieuw proberen
@@ -29,16 +29,16 @@ import { GstandaardContraindicationStore } from '../gstandaard-contraindication.
     }
     <div class="overflow-hidden rounded-lg border border-gray-300">
       @if (store.loading()) {
-        <p class="px-3 py-2.5 text-left text-xs text-gray-500">contraindicaties laden…</p>
+        <p class="px-3 py-2.5 text-left text-xs text-muted">contraindicaties laden…</p>
       } @else if (!contraindications().length) {
-        <p class="px-3 py-2.5 text-left text-xs text-gray-500">Nog geen contraindicaties</p>
+        <p class="px-3 py-2.5 text-left text-xs text-muted">Nog geen contraindicaties</p>
       } @else {
         <table class="w-full table-fixed border-collapse text-xs">
           <tbody>
             @for (item of contraindications(); track item.id) {
               <tr class="group border-t border-gray-100 first:border-t-0 hover:bg-gray-50">
-                <td class="w-full max-w-0 truncate py-1.5 pr-1.5 pl-3 font-medium text-gray-900">{{ item.description }}</td>
-                <td class="w-16 truncate py-1.5 pr-1.5 whitespace-nowrap text-gray-500 tabular-nums">{{ item.id }}</td>
+                <td class="w-full max-w-0 truncate py-1.5 pr-1.5 pl-3 font-medium text-foreground">{{ item.description }}</td>
+                <td class="w-16 truncate py-1.5 pr-1.5 whitespace-nowrap text-muted tabular-nums">{{ item.id }}</td>
                 <td class="w-8 py-1.5">
                   <app-delete-button
                     [ariaLabel]="item.description + ' verwijderen'"

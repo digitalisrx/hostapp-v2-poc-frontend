@@ -18,13 +18,14 @@ import { LabDataField } from '../lab/lab-data-field/lab-data-field';
 import { MedicationField } from '../medication/medication-field/medication-field';
 import { Medication } from '../medication/medication.model';
 import { PatientSelector } from '../patient/patient-selector/patient-selector';
+import { PatientStore } from '../patient/patient.store';
 import { PrescriptorPrescription, PrescriptorService, PrescriptorSessionType, toPrescriptorPrescription } from '../prescriptor.service';
 import { SectionHeader } from '../shared/section-header/section-header';
 
 const MIN_WIDTH = 240;
 const MAX_WIDTH = 700;
 const DEFAULT_WIDTH = 400;
-const COLLAPSED_WIDTH = 48;
+const COLLAPSED_WIDTH = 52;
 const WIDTH_STORAGE_KEY = 'app-patient-sidebar-width';
 const KEYBOARD_STEP = 16;
 const KEYBOARD_STEP_LARGE = 48;
@@ -69,7 +70,7 @@ function clamp(value: number, min: number, max: number): number {
         }
         <button
           type="button"
-          class="flex justify-center items-center size-9 ml-auto rounded-lg p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+          class="flex justify-center items-center size-9 ml-auto rounded-lg p-1 text-muted hover:bg-gray-100 hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
           [attr.aria-expanded]="!collapsed()"
           [attr.aria-label]="collapsed() ? 'Zijbalk uitklappen' : 'Zijbalk inklappen'"
           (click)="toggleCollapsed()"
@@ -130,7 +131,7 @@ function clamp(value: number, min: number, max: number): number {
               <label>Medicatie</label>
               <button
                 type="button"
-                class="flex size-6 items-center justify-center rounded text-gray-500 hover:bg-gray-100 hover:text-gray-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+                class="flex size-6 items-center justify-center rounded text-muted hover:bg-gray-100 hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
                 aria-label="Medicatie details bekijken"
                 (click)="medicationField.openDetails()"
               >
@@ -151,7 +152,8 @@ function clamp(value: number, min: number, max: number): number {
         <div class="relative flex gap-0 border-t border-gray-200 p-3">
           <button
             type="button"
-            class="primary flex flex-1 items-center justify-center gap-1.5 rounded-r-none px-3 py-2 text-sm"
+            class="primary flex flex-1 items-center justify-center gap-1.5 rounded-r-none px-3 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-50"
+            [disabled]="noPatientSelected()"
             (click)="runMainAction()"
           >
             @if (activeSessionType() === selectedMode()) {
@@ -164,7 +166,7 @@ function clamp(value: number, min: number, max: number): number {
 
           <button
             type="button"
-            class="flex items-center justify-center rounded-lg rounded-l-none border border-gray-300 px-1 text-gray-500 hover:bg-gray-50 hover:text-gray-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+            class="flex items-center justify-center rounded-lg rounded-l-none border border-gray-300 px-1 text-muted hover:bg-gray-50 hover:text-gray-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
             [attr.aria-expanded]="modeMenuOpen()"
             aria-haspopup="true"
             aria-label="Modus kiezen"
@@ -179,24 +181,24 @@ function clamp(value: number, min: number, max: number): number {
             >
               <button
                 type="button"
-                class="flex w-full items-center justify-between gap-2 px-3 py-2 text-left hover:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+                class="flex w-full items-center justify-between gap-2 px-3 py-2 text-left hover:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
                 [attr.aria-current]="selectedMode() === 'formulary' ? 'true' : null"
                 (click)="selectMode('formulary', $event)"
               >
                 Prescriptor
                 @if (selectedMode() === 'formulary') {
-                  <svg lucideCheck [size]="16" class="text-blue-600"></svg>
+                  <svg lucideCheck [size]="16" class="text-primary"></svg>
                 }
               </button>
               <button
                 type="button"
-                class="flex w-full items-center justify-between gap-2 border-t border-gray-100 px-3 py-2 text-left hover:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+                class="flex w-full items-center justify-between gap-2 border-t border-gray-100 px-3 py-2 text-left hover:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
                 [attr.aria-current]="selectedMode() === 'create-rx' ? 'true' : null"
                 (click)="selectMode('create-rx', $event)"
               >
                 CreateRx
                 @if (selectedMode() === 'create-rx') {
-                  <svg lucideCheck [size]="16" class="text-blue-600"></svg>
+                  <svg lucideCheck [size]="16" class="text-primary"></svg>
                 }
               </button>
             </div>
@@ -223,7 +225,8 @@ function clamp(value: number, min: number, max: number): number {
         <div class="border-t border-gray-200 p-2">
           <button
             type="button"
-            class="primary flex w-full items-center justify-center px-2 py-2"
+            class="primary size-9 flex w-full items-center justify-center px-2 py-2 disabled:cursor-not-allowed disabled:opacity-50"
+            [disabled]="noPatientSelected()"
             [attr.aria-label]="(selectedMode() === 'formulary' ? 'Prescriptor' : 'CreateRx') + ' starten'"
             (click)="runMainAction()"
           >
@@ -246,6 +249,7 @@ function clamp(value: number, min: number, max: number): number {
 })
 export class PatientSidebar {
   protected readonly prescriptorService = inject(PrescriptorService);
+  private readonly patientStore = inject(PatientStore);
 
   protected readonly MIN_WIDTH = MIN_WIDTH;
   protected readonly MAX_WIDTH = MAX_WIDTH;
@@ -258,8 +262,8 @@ export class PatientSidebar {
   protected readonly resizing = signal(false);
   protected readonly handleClass = computed(
     () =>
-      `absolute top-0 right-[-3px] h-full w-1.5 touch-none ${
-        this.resizing() ? 'bg-blue-400/30' : 'hover:bg-blue-400/30'
+      `absolute top-0 right-[-4px] h-full w-2 touch-none rounded-sm ${
+        this.resizing() ? 'bg-primary-hover/15' : 'hover:bg-primary-hover/15'
       }`,
   );
 
@@ -270,6 +274,9 @@ export class PatientSidebar {
     prescription?: PrescriptorPrescription;
     editingMedicationId?: string;
   }>();
+  modeChange = output<PrescriptorSessionType>();
+
+  protected readonly noPatientSelected = computed(() => this.patientStore.selectedPatient() === null);
 
   protected readonly icpcRunModalOpen = signal(false);
   protected readonly selectedMode = signal<PrescriptorSessionType>('formulary');
@@ -316,6 +323,7 @@ export class PatientSidebar {
     event.stopPropagation();
     this.selectedMode.set(mode);
     this.modeMenuOpen.set(false);
+    this.modeChange.emit(mode);
   }
 
   protected closeModeMenu() {

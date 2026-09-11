@@ -9,7 +9,7 @@
       <div class="ml-auto flex items-center gap-2">
         <button
           type="button"
-          class="flex size-9 items-center justify-center rounded-lg p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+          class="flex size-9 items-center justify-center rounded-lg p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
           aria-label="Debug"
           (click)="debugModalOpen.set(true)"
         >
@@ -18,7 +18,7 @@
         <div class="relative">
           <button
             type="button"
-            class="flex size-9 items-center justify-center rounded-lg bg-blue-600 text-sm font-semibold text-white hover:bg-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+            class="flex size-9 items-center justify-center rounded-lg bg-primary font-semibold text-white hover:bg-primary-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
             [attr.aria-expanded]="accountMenuOpen()"
             aria-haspopup="true"
             [attr.aria-label]="'Account: ' + (user.email ?? user.userId)"
@@ -27,6 +27,18 @@
             {{ initialFor(user) }}
           </button>
 
+          @if (organizationWarning(); as warning) {
+            @if (!accountMenuOpen()) {
+              <div
+                class="absolute top-full right-0 mt-1 flex w-64 items-start gap-1.5 rounded-lg border border-primary bg-primary/8 px-3 py-2 text-xs text-primary-hover shadow-lg"
+                role="alert"
+              >
+                <svg lucideTriangleAlert [size]="14" class="mt-px shrink-0"></svg>
+                {{ warning }}
+              </div>
+            }
+          }
+
           @if (accountMenuOpen()) {
             <div
               class="absolute top-full right-0 mt-1 w-56 overflow-hidden rounded-lg border border-gray-200 bg-white text-sm shadow-lg"
@@ -34,7 +46,7 @@
               <p class="truncate px-3 py-2 text-gray-500">{{ user.email ?? user.userId }}</p>
               <button
                 type="button"
-                class="flex w-full items-center gap-2 border-t border-gray-100 px-3 py-2 text-left hover:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+                class="flex w-full items-center gap-2 border-t border-gray-100 px-3 py-2 text-left hover:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
                 (click)="openSettings($event)"
               >
                 <svg lucideSettings [size]="16"></svg>
@@ -42,7 +54,7 @@
               </button>
               <button
                 type="button"
-                class="flex w-full items-center gap-2 border-t border-gray-100 px-3 py-2 text-left hover:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+                class="flex w-full items-center gap-2 border-t border-gray-100 px-3 py-2 text-left hover:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
                 (click)="openTargets($event)"
               >
                 <svg lucideTarget [size]="16"></svg>
@@ -51,7 +63,7 @@
               @if (user.hasPrescriptorLicenseKey) {
                 <button
                   type="button"
-                  class="flex w-full items-center gap-2 border-t border-gray-100 px-3 py-2 text-left hover:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+                  class="flex w-full items-center gap-2 border-t border-gray-100 px-3 py-2 text-left hover:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
                   (click)="openOrganization($event)"
                 >
                   <svg lucideBuilding2 [size]="16"></svg>
@@ -60,7 +72,7 @@
               }
               <button
                 type="button"
-                class="flex w-full items-center gap-2 border-t border-gray-100 px-3 py-2 text-left hover:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+                class="flex w-full items-center gap-2 border-t border-gray-100 px-3 py-2 text-left hover:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
                 (click)="logout($event)"
               >
                 <svg lucideLogOut [size]="16"></svg>
@@ -76,8 +88,13 @@
       <app-patient-sidebar
         [activeSessionType]="activeSessionType()"
         (runSession)="runSession($event.type, $event.icpc, $event.prescription, $event.editingMedicationId)"
+        (modeChange)="lastSessionType.set($event)"
       />
-      <app-prescriptor-view [iframeUrl]="iframeUrl()" [errorMessage]="errorMessage()" />
+      <app-prescriptor-view
+        [iframeUrl]="iframeUrl()"
+        [errorMessage]="errorMessage()"
+        [sessionType]="lastSessionType()"
+      />
     </main>
 
     <app-debug-modal [open]="debugModalOpen()" (close)="debugModalOpen.set(false)" />

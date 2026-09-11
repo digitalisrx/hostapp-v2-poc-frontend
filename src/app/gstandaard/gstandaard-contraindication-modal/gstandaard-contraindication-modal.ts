@@ -28,14 +28,14 @@ const MIN_SEARCH_LENGTH = 2;
             type="search"
             autofocus
             placeholder="Zoeken op code of omschrijving"
-            class="w-full rounded-lg border border-gray-300 py-2 pr-8 pl-8 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+            class="w-full rounded-lg border border-gray-300 py-2 pr-8 pl-8 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
             [value]="searchTerm()"
             (input)="onSearchInput($event)"
           />
           @if (searchTerm()) {
             <button
               type="button"
-              class="absolute top-1/2 right-2 flex size-6 -translate-y-1/2 items-center justify-center rounded-lg text-gray-400 hover:bg-red-50 hover:text-red-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+              class="absolute top-1/2 right-2 flex size-6 -translate-y-1/2 items-center justify-center rounded-lg text-gray-400 hover:bg-red-50 hover:text-red-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
               aria-label="Zoekopdracht wissen"
               (click)="clearSearch()"
             >
@@ -48,30 +48,29 @@ const MIN_SEARCH_LENGTH = 2;
       <ul class="max-h-72 divide-y divide-gray-100 overflow-y-auto rounded-lg border border-gray-200">
         @switch (searchResource.status()) {
           @case ('loading') {
-            <li class="px-3 py-4 text-center text-sm text-gray-500">Zoeken...</li>
+            <li class="px-3 py-4 text-center text-sm text-muted">Zoeken...</li>
           }
           @case ('error') {
             <li class="px-3 py-4 text-center text-sm text-red-600">Resultaten konden niet worden geladen</li>
           }
           @case ('idle') {
-            <li class="px-3 py-4 text-center text-sm text-gray-500">Typ minimaal 2 tekens om te zoeken</li>
+            <li class="px-3 py-4 text-center text-sm text-muted">Typ minimaal 2 tekens om te zoeken</li>
           }
           @default {
             @if (searchResource.value(); as results) {
               @if (results.length === 0) {
-                <li class="px-3 py-4 text-center text-sm text-gray-500">Geen resultaten gevonden.</li>
+                <li class="px-3 py-4 text-center text-sm text-muted">Geen resultaten gevonden.</li>
               } @else {
                 @for (result of results; track result.id) {
                   <li>
                     <div class="flex cursor-pointer items-center gap-2 p-2 text-sm hover:bg-gray-50" (click)="toggle(result)">
                       <input
                         type="checkbox"
-                        class="size-4 shrink-0 rounded-lg border-gray-300 text-blue-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+                        class="size-4 shrink-0 rounded-lg border-gray-300 accent-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
                         [checked]="isAdded(result.id)"
-                        (change)="toggle(result)"
                       />
-                      <span class="min-w-0 flex-1 truncate font-medium text-gray-900">{{ result.description }}</span>
-                      <span class="w-16 shrink-0 truncate font-normal text-left text-gray-500 tabular-nums">{{ result.id }}</span>
+                      <span class="min-w-0 flex-1 truncate font-medium text-foreground">{{ result.description }}</span>
+                      <span class="w-16 shrink-0 truncate font-normal text-left text-muted tabular-nums">{{ result.id }}</span>
                     </div>
                   </li>
                 }

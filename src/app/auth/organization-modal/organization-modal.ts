@@ -25,14 +25,14 @@ import { AuthStore } from '../auth.store';
             >
               <input
                 type="checkbox"
-                class="size-4 shrink-0 rounded-lg border-gray-300 text-blue-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+                class="size-4 shrink-0 rounded-lg border-gray-300 accent-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
                 [checked]="organization.id === selectedOrganizationId()"
                 [disabled]="!organization.enabled || selecting() === organization.id"
               />
               <span class="min-w-0 flex-1">
-                <span class="block truncate font-medium text-gray-900">{{ organization.name }}</span>
+                <span class="block truncate font-medium text-foreground">{{ organization.name }}</span>
                 @if (organization.his) {
-                  <span class="block font-normal truncate text-gray-500">{{ organization.his }}</span>
+                  <span class="block font-normal truncate text-muted">{{ organization.his }}</span>
                 }
                 @if (!organization.enabled) {
                   <span class="block text-gray-400">Uitgeschakeld</span>
@@ -41,7 +41,7 @@ import { AuthStore } from '../auth.store';
               </div>
           </li>
         } @empty {
-          <li class="px-3 py-4 text-center text-gray-500">Geen organisaties beschikbaar.</li>
+          <li class="px-3 py-4 text-center text-muted">Geen organisaties beschikbaar.</li>
         }
       </ul>
     </app-modal>

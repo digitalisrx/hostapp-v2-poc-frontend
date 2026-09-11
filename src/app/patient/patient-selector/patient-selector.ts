@@ -11,16 +11,16 @@ import { PatientStore } from '../patient.store';
     <div>
       <button
         type="button"
-        class="flex w-full items-center gap-2 !font-normal rounded-lg border border-gray-300 px-3 py-1.5 min-h-9 text-left text-sm hover:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+        class="flex w-full items-center gap-2 !font-normal rounded-lg border border-gray-300 px-3 py-1.5 min-h-9 text-left text-sm hover:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
         (click)="modalOpen.set(true)"
       >
-        <svg lucideUser [size]="selectedPatient() ? 18 : 14" class="shrink-0 text-gray-500"></svg>
+        <svg lucideUser [size]="selectedPatient() ? 18 : 14" class="shrink-0 text-muted"></svg>
         <span class="min-w-0 flex-1 text-xs">
           @if (selectedPatient(); as patient) {
-            <span class="block truncate text-gray-900 font-medium text-sm">{{ patient.name }}</span>
-            <span class="block text-gray-500">{{ patient.gender }} &middot; {{ formatAge(patient) }}</span>
+            <span class="block truncate text-foreground font-medium text-sm">{{ patient.name }}</span>
+            <span class="block text-muted">{{ patient.gender }} &middot; {{ formatAge(patient) }}</span>
           } @else {
-            <span class="text-gray-500">Patiënt selecteren</span>
+            <span class="text-muted">Patiënt selecteren</span>
           }
         </span>
       </button>

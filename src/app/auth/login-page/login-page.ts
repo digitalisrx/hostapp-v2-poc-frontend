@@ -27,7 +27,7 @@ interface LoginModel {
               type="email"
               autofocus
               autocomplete="email"
-              class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+              class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
               [formField]="loginForm.email"
             />
             @if (loginForm.email().touched() && loginForm.email().invalid()) {
@@ -42,7 +42,7 @@ interface LoginModel {
             <input
               type="password"
               autocomplete="current-password"
-              class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+              class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
               [formField]="loginForm.password"
             />
             @if (loginForm.password().touched() && loginForm.password().invalid()) {
